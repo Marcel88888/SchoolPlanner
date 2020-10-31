@@ -2,10 +2,10 @@ using System;
 
 namespace SchoolPlanner.Models {
     public class Classroom {
-        public int number { get; set; }
+        public int Number { get; set; }
 
-        public Classroom(int num) {
-            number = num;
+        public Classroom(int number) {
+            Number = number;
         }
     }
 }

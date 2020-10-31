@@ -16,8 +16,6 @@ namespace SchoolPlanner.Controllers {
         }
 
         public IActionResult Index() {
-            Classroom classroom1 = new Classroom(101);
-            ViewData["classroom"] = classroom1.number;
             return View();
         }
 

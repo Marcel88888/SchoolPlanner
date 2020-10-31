@@ -1,7 +1,64 @@
+@model Reader
+
 @{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Teachers";
 }
 
 <div class="text-center">
+
     <h1 class="display-4">TEACHERS</h1>
+
+    <table style="width:600px height:300px align:center">
+        <thead>
+            <th></th>
+            <th>Monday</th>
+            <th>Tuesday</th>
+            <th>Wednesday</th>
+            <th>Thursday</th>
+            <th>Friday</th>
+        </thead>
+        @for(int i=0; i<9; i++) {
+            <tr>
+                @switch(i) {
+                    case 0:
+                        <td>8:00 - 8:45</td>
+                        break;
+                    case 1:
+                        <td>9:00 - 9:45</td>
+                        break;
+                    case 2:
+                        <td>10:00 - 10:45</td>
+                        break;
+                    case 3:
+                        <td>11:00 - 11:45</td>
+                        break;
+                    case 4:
+                        <td>12:00 - 12:45</td>
+                        break;
+                    case 5:
+                        <td>13:00 - 13:45</td>
+                        break;
+                    case 6:
+                        <td>14:00 - 14:45</td>
+                        break;
+                    case 7:
+                        <td>15:00 - 15:45</td>
+                        break;
+                    case 8:
+                        <td>16:00 - 16:45</td>
+                        break;
+                    default:
+                        break;
+                }
+                @for(int j=0; j<5; ++j) {
+                    <td>
+                        <button type="button" class="btn btn-primary btn-lg">Button @j @i</button>
+                    </td>
+                }
+                
+            </tr>   
+            <br>
+        }
+    </table>
+
 </div>
