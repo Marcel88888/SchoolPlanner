@@ -16,7 +16,8 @@ namespace SchoolPlanner.Controllers {
         }
 
         public IActionResult Index() {
-            return View();
+            Reader reader = new Reader();
+            return View(reader);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

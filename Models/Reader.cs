@@ -6,20 +6,20 @@ using System.IO;
 namespace SchoolPlanner.Models {
     public class Reader {
 
-        public List<int> Classrooms { get; set; }
-        public List<string> Classes { get; set; }
+        public List<Classroom> Classrooms { get; set; }
+        public List<_Class> Classes { get; set; }
         public List<string> Subjects { get; set; }
-        public List<string> Teachers { get; set; }
+        public List<Teacher> Teachers { get; set; }
 
         public Reader() {
 
             string jsonFilePath = "/home/dell/Studia/sem6/NTR/projects/SchoolPlanner/data/data.json";
             string json = File.ReadAllText(jsonFilePath);
 
-            Classrooms = new List<int>();
-            Classes = new List<string>();
+            Classrooms = new List<Classroom>();
+            Classes = new List<_Class>();
             Subjects = new List<string>();
-            Teachers = new List<string>();
+            Teachers = new List<Teacher>();
 
             using JsonDocument doc = JsonDocument.Parse(json);
             JsonElement data = doc.RootElement;
@@ -31,11 +31,11 @@ namespace SchoolPlanner.Models {
             
             for(int i = 0; i<classrooms.GetArrayLength(); i++) {
                 int classroom = Int16.Parse(classrooms[i].GetString());
-                Classrooms.Add(classroom);
+                Classrooms.Add(new Classroom(classroom));
             }
 
             for(int i = 0; i<classes.GetArrayLength(); i++) {
-                Classes.Add(classes[i].GetString());
+                Classes.Add(new _Class(classes[i].GetString()));
             }
 
             for(int i = 0; i<subjects.GetArrayLength(); i++) {
@@ -43,7 +43,7 @@ namespace SchoolPlanner.Models {
             }
 
             for(int i = 0; i<teachers.GetArrayLength(); i++) {
-                Teachers.Add(teachers[i].GetString());
+                Teachers.Add(new Teacher(teachers[i].GetString()));
             }
         }
     }

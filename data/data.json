@@ -1,8 +1,8 @@
 {
-  "classrooms":["110","111","120","121"],
+  "classrooms":["101","102","201","202"],
   "classes":["1a","1b","1c","2a","2b","3a","3b","4a","4b"],
   "subjects":["mathematics","geography","english","physics","biology"],
-  "teachers":["kowalski","nowak","smith","clarkson","may","hammond","atkinson"],
+  "teachers":["Kowalski","Nowak","Smith","Clarkson","May","Hammond","Atkinson"],
   "activities":[
     {"room":"110", "group":"1a", "class":"mat", "slot":1, "teacher":"kowalski"},
     {"room":"121", "group":"1c", "class":"eng", "slot":3, "teacher":"nowak"}

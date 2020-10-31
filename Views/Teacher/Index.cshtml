@@ -1,12 +1,20 @@
+@using SchoolPlanner.Models
 @model Reader
 
 @{
     ViewData["Title"] = "Teachers";
 }
 
+<style>
+    th {width:150px;}
+    button {height:50px; max-width:150px;}
+</style>
+
 <div class="text-center">
 
     <h1 class="display-4">TEACHERS</h1>
+
+    @Html.DropDownListFor(model=>model.Teachers, new SelectList(Model.Teachers, "", "Surname"), "Select a teacher", new {htmlAttributes = new {@class="form-control"}})
 
     <table style="width:600px height:300px align:center">
         <thead>
@@ -21,38 +29,38 @@
             <tr>
                 @switch(i) {
                     case 0:
-                        <td>8:00 - 8:45</td>
+                        <td><strong>8:00 - 8:45</strong></td>
                         break;
                     case 1:
-                        <td>9:00 - 9:45</td>
+                        <td><strong>9:00 - 9:45</strong></td>
                         break;
                     case 2:
-                        <td>10:00 - 10:45</td>
+                        <td><strong>10:00 - 10:45</strong></td>
                         break;
                     case 3:
-                        <td>11:00 - 11:45</td>
+                        <td><strong>11:00 - 11:45</strong></td>
                         break;
                     case 4:
-                        <td>12:00 - 12:45</td>
+                        <td><strong>12:00 - 12:45</strong></td>
                         break;
                     case 5:
-                        <td>13:00 - 13:45</td>
+                        <td><strong>13:00 - 13:45</strong></td>
                         break;
                     case 6:
-                        <td>14:00 - 14:45</td>
+                        <td><strong>14:00 - 14:45</strong></td>
                         break;
                     case 7:
-                        <td>15:00 - 15:45</td>
+                        <td><strong>15:00 - 15:45</strong></td>
                         break;
                     case 8:
-                        <td>16:00 - 16:45</td>
+                        <td><strong>16:00 - 16:45</strong></td>
                         break;
                     default:
                         break;
                 }
                 @for(int j=0; j<5; ++j) {
                     <td>
-                        <button type="button" class="btn btn-primary btn-lg">Button @j @i</button>
+                        <button type="button" class="btn btn-primary btn-block"></button>
                     </td>
                 }
                 
