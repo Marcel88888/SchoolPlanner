@@ -3,8 +3,10 @@
   "classes":["1a","1b","1c","2a","2b","3a","3b","4a","4b"],
   "subjects":["mathematics","geography","english","physics","biology"],
   "teachers":["Kowalski","Nowak","Smith","Clarkson","May","Hammond","Atkinson"],
-  "activities":[
-    {"room":"110", "group":"1a", "class":"mat", "slot":1, "teacher":"kowalski"},
-    {"room":"121", "group":"1c", "class":"eng", "slot":3, "teacher":"nowak"}
+  "lessons":[
+    {"classroom":"101", "class":"1a", "subject":"mathematics", "slot":1, "teacher":"Kowalski"},
+    {"classroom":"102", "class":"1b", "subject":"english", "slot":3, "teacher":"Nowak"},
+	{"classroom":"101", "class":"1a", "subject":"physics", "slot":5, "teacher":"Smith"},
+    {"classroom":"101", "class":"1a", "subject":"biology", "slot":7, "teacher":"May"}
   ]
 }
