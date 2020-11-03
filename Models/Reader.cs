@@ -10,6 +10,7 @@ namespace SchoolPlanner.Models {
         public List<_Class> Classes { get; set; }
         public List<string> Subjects { get; set; }
         public List<Teacher> Teachers { get; set; }
+        public string Chosen_class { get; set; }
 
         public Reader() {
 
