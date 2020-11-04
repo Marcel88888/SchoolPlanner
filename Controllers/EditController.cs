@@ -16,7 +16,20 @@ namespace SchoolPlanner.Controllers {
         }
 
         public IActionResult Index() {
-            return View();
+            Edit edit = new Edit();
+            Reader reader = new Reader();
+            return View(edit);
+        }
+
+        [HttpPost]
+        public IActionResult Index(Edit edit, Reader reader) {
+            if (edit.ClassroomToAdd != null) {
+                reader.Classrooms.Add(new Classroom(edit.ClassroomToAdd));
+                foreach(Classroom classroom in reader.Classrooms) {
+                    Console.WriteLine(classroom.Number);
+                }
+            }
+            return View(edit);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
