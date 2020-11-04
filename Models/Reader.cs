@@ -103,5 +103,16 @@ namespace SchoolPlanner.Models {
                 }
             }
         }
+
+        public List<Lesson> getLessonsByClass(string _class) { // change for (__Class _class) (but then @Html.DropDownListFor in Index.cshtml is not working)
+            List<Lesson> chosen_lessons = new List<Lesson>();
+            foreach(Lesson lesson in Lessons) {
+                if(lesson._Class.Name.Equals(_class)) {
+                    chosen_lessons.Add(lesson);
+                    Console.WriteLine(lesson.Slot);
+                }
+            }
+            return chosen_lessons;
+        }
     }
 }
