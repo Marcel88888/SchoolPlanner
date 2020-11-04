@@ -34,7 +34,7 @@ namespace SchoolPlanner.Models {
             var lessons = data.GetProperty("lessons");
             
             for(int i=0; i<classrooms.GetArrayLength(); i++) {
-                int classroom = Int16.Parse(classrooms[i].GetString());
+                string classroom = classrooms[i].GetString();
                 Classrooms.Add(new Classroom(classroom));
             }
 
@@ -50,23 +50,58 @@ namespace SchoolPlanner.Models {
                 Teachers.Add(new Teacher(teachers[i].GetString()));
             }
 
-            Console.WriteLine(lessons);
-            var cl_room = Int16.Parse(lessons[0].GetProperty("classroom").GetString());
-            Console.WriteLine(cl_room);
-            /*
-
+            // finding objects with the same data as in lessons
             for(int i=0; i<lessons.GetArrayLength(); i++) {
-                var cl_room = Int16.Parse(lessons[i].GetProperty("classroom").GetString());
+
+                Classroom found_classroom = new Classroom();
+                _Class found_class = new _Class();
+                string found_subject = null; 
+                Teacher found_teacher = new Teacher();
+
+                // finding classrooms
+                var cl_room = lessons[i].GetProperty("classroom").GetString();
                 for(int j=0; j<classrooms.GetArrayLength(); j++) {
-                    int cl_room2 = Classrooms[j].Number;
-                    if (cl_room == cl_room2) {
-                        Classroom found_classroom = Classrooms[j];
+                    string cl_room2 = Classrooms[j].Number;
+                    if (string.Equals(cl_room, cl_room2)) {
+                        found_classroom = Classrooms[j];
+                        break;
+                    }
+                }
+                // finding classes
+                var cl = lessons[i].GetProperty("class").GetString();
+                for(int j=0; j<classes.GetArrayLength(); j++) {
+                    string cl2 = Classes[j].Name;
+                    if (string.Equals(cl, cl2)) {
+                        found_class = Classes[j];
+                        break;
+                    }
+                } 
+                // finding subjects
+                var subj = lessons[i].GetProperty("subject").GetString();
+                for(int j=0; j<subjects.GetArrayLength(); j++) {
+                    string subj2 = Subjects[j];
+                    if (string.Equals(subj, subj2)) {
+                        found_subject = Subjects[j];
+                        break;
+                    }
+                }  
+                // finfing teachers
+                var t = lessons[i].GetProperty("teacher").GetString();
+                for(int j=0; j<teachers.GetArrayLength(); j++) {
+                    string t2 = Teachers[j].Surname;
+                    if (string.Equals(t, t2)) {
+                        found_teacher = Teachers[j];
                         break;
                     }
                 }   
-                //Lessons.Add();
+                int slot = lessons[i].GetProperty("slot").GetInt16();
+                if(found_classroom!=null && found_class!=null && !String.IsNullOrEmpty(found_subject) && found_teacher!=null) {
+                    Lessons.Add(new Lesson(found_classroom, found_class, found_subject, slot, found_teacher));
+                }
+                else {
+                    Console.WriteLine("Error: Lesson defined in the json file contains data that is not defined in the previous sections of the file");
+                }
             }
-            */
         }
     }
 }
