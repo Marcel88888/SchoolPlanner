@@ -1,0 +1,95 @@
+@using SchoolPlanner.Models
+@model 
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<head>
+    <title>Bootstrap Example</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+
+<div class="text-center">
+    <h1 class="display-4">Edit</h1>
+</div>
+
+<div class="container">
+    <ul class="nav nav-pills">
+        <li class="active"><a data-toggle="pill" href="#classrooms">Classrooms</a></li>
+        <li><a data-toggle="pill" href="#classes">Classes</a></li>
+        <li><a data-toggle="pill" href="#subjects">Subjects</a></li>
+        <li><a data-toggle="pill" href="#teachers">Teachers</a></li>
+    </ul>
+  
+    <div class="tab-content">
+        <div id="classrooms" class="tab-pane fade in active">
+            <ul class="nav nav-pills">
+                <li class="active"><a data-toggle="pill" href="#add_classroom">Add</a></li>
+                <li><a data-toggle="pill" href="#delete_classroom">Delete</a></li>
+            </ul>
+            <div class="tab-content">
+                <div id="add_classroom" class="tab-pane fade in active">
+                    <h3>Add a classroom:</h3>
+                    @using (Html.BeginForm()) {
+                        @Html.AntiForgeryToken()
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger"} )
+
+                        @Html.DropDownListFor(model=>model.ChosenClass, new SelectList(Model.Classes, "", "Name"), "Select a class", new {htmlAttributes = new {@class="form-control"}})
+                        <button type="submit" class="btn btn-primary">Select</button>
+                    }
+                </div>
+                <div id="delete_classroom" class="tab-pane fade">
+                    <h3>Delete a classroom:</h3>
+                </div>
+            </div>
+        </div>
+        <div id="classes" class="tab-pane fade">
+            <ul class="nav nav-pills">
+                <li class="active"><a data-toggle="pill" href="#add_class">Add</a></li>
+                <li><a data-toggle="pill" href="#delete_class">Delete</a></li>
+            </ul>
+            <div class="tab-content">
+                <div id="add_class" class="tab-pane fade in active">
+                    <h3>Add a class:</h3>
+                </div>
+                <div id="delete_class" class="tab-pane fade">
+                    <h3>Delete the class:</h3>
+                </div>
+            </div>
+        </div>
+        <div id="subjects" class="tab-pane fade">
+            <ul class="nav nav-pills">
+                <li class="active"><a data-toggle="pill" href="#add_subject">Add</a></li>
+                <li><a data-toggle="pill" href="#delete_subject">Delete</a></li>
+            </ul>
+            <div class="tab-content">
+                <div id="add_subject" class="tab-pane fade in active">
+                    <h3>Add a subject:</h3>
+                </div>
+                <div id="delete_subject" class="tab-pane fade">
+                    <h3>Delete a subject:</h3>
+                </div>
+            </div>
+        </div>
+        <div id="teachers" class="tab-pane fade">
+            <ul class="nav nav-pills">
+                <li class="active"><a data-toggle="pill" href="#add_teacher">Add</a></li>
+                <li><a data-toggle="pill" href="#delete_teacher">Delete</a></li>
+            </ul>
+            <div class="tab-content">
+                <div id="add_teacher" class="tab-pane fade in active">
+                    <h3>Add a teacher:</h3>
+                </div>
+                <div id="delete_teacher" class="tab-pane fade">
+                    <h3>Delete the teacher:</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

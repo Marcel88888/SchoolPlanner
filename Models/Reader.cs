@@ -11,7 +11,7 @@ namespace SchoolPlanner.Models {
         public List<string> Subjects { get; set; }
         public List<Teacher> Teachers { get; set; }
         public List<Lesson> Lessons { get; set; }
-        public string Chosen_class { get; set; }
+        public string ChosenClass { get; set; }
 
         public Reader() {
 
@@ -106,15 +106,9 @@ namespace SchoolPlanner.Models {
 
         public List<Lesson> getLessonsByClass(string _class) { // TODO: change for (__Class _class) (but then @Html.DropDownListFor in Index.cshtml is not working)
             List<Lesson> chosen_lessons = new List<Lesson>();
-            Console.WriteLine("UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU");
             foreach (Lesson lesson in Lessons) {
                 if (lesson._Class.Name.Equals(_class)) {
-                    Console.WriteLine("tak");
                     chosen_lessons.Add(lesson);
-                    Console.WriteLine(lesson.Slot);
-                }
-                else {
-                    Console.WriteLine("nie");
                 }
             }
             return chosen_lessons;
