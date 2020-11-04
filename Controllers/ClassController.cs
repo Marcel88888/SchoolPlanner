@@ -24,6 +24,8 @@ namespace SchoolPlanner.Controllers {
         public IActionResult Index(Reader reader) {
             ViewData["chosen_class"] = reader.Chosen_class;
             ViewData["chosen_lessons"] = reader.getLessonsByClass(reader.Chosen_class);
+            Console.WriteLine("AAAAAAAAAAA");
+            Console.WriteLine(reader.getLessonsByClass(reader.Chosen_class));
             return View(reader);
         }
 

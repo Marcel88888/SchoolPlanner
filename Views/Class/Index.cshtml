@@ -1,3 +1,4 @@
+@using System.Collections.Generic
 @using SchoolPlanner.Models
 @model Reader
 
@@ -22,9 +23,7 @@
         <button type="submit" class="btn btn-primary">Select</button>
     }
 
-    <div class="form-group">
-        <input type="text" class="form-control" id="chosen_class" value="@ViewData["chosen_class"]">
-    </div>
+    @{var chosen_lessons = ViewData["chosen_lessons"] as List<Lesson>;}
 
     <table>
         <thead>
@@ -35,7 +34,8 @@
             <th>Thursday</th>
             <th>Friday</th>
         </thead>
-        @for(int i=0; i<9; i++) {
+        @{int slot_number = 0;}
+        @for (int i=0; i<9; i++) {
             <tr>
                 @switch(i) {
                     case 0:
@@ -68,12 +68,27 @@
                     default:
                         break;
                 }
-                @for(int j=0; j<5; ++j) {
+                @for (int j=0; j<5; ++j) {
                     <td>
-                        <button type="button" class="btn btn-primary btn-block">@ViewData["chosen_class"]</button>
+                        @{slot_number++;}
+                        @if (chosen_lessons != null) {
+                            bool lesson_found = false;
+                            @foreach (Lesson lesson in chosen_lessons) { // TODO: for loop outside this loops (i, j) and adding contents to buttons by their id 
+                                if (lesson.Slot == slot_number) {
+                                    <button id="@slot_number" type="button" class="btn btn-primary btn-block">@lesson.Classroom.Number @lesson.Subject</button>
+                                    lesson_found = true;
+                                    break;
+                                }   
+                            }
+                            @if (lesson_found == false) {
+                                <button type="button" class="btn btn-primary btn-block"></button>    
+                            }
+                        }
+                        else {
+                            <button type="button" class="btn btn-primary btn-block"></button>
+                        }
                     </td>
                 }
-                
             </tr>   
             <br>
         }

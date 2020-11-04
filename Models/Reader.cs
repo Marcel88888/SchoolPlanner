@@ -33,25 +33,25 @@ namespace SchoolPlanner.Models {
             var teachers = data.GetProperty("teachers");
             var lessons = data.GetProperty("lessons");
             
-            for(int i=0; i<classrooms.GetArrayLength(); i++) {
+            for (int i=0; i<classrooms.GetArrayLength(); i++) {
                 string classroom = classrooms[i].GetString();
                 Classrooms.Add(new Classroom(classroom));
             }
 
-            for(int i=0; i<classes.GetArrayLength(); i++) {
+            for (int i=0; i<classes.GetArrayLength(); i++) {
                 Classes.Add(new _Class(classes[i].GetString()));
             }
 
-            for(int i=0; i<subjects.GetArrayLength(); i++) {
+            for (int i=0; i<subjects.GetArrayLength(); i++) {
                 Subjects.Add(subjects[i].GetString());
             }
 
-            for(int i=0; i<teachers.GetArrayLength(); i++) {
+            for (int i=0; i<teachers.GetArrayLength(); i++) {
                 Teachers.Add(new Teacher(teachers[i].GetString()));
             }
 
             // finding objects with the same data as in lessons
-            for(int i=0; i<lessons.GetArrayLength(); i++) {
+            for (int i=0; i<lessons.GetArrayLength(); i++) {
 
                 Classroom found_classroom = new Classroom();
                 _Class found_class = new _Class();
@@ -60,7 +60,7 @@ namespace SchoolPlanner.Models {
 
                 // finding classrooms
                 var cl_room = lessons[i].GetProperty("classroom").GetString();
-                for(int j=0; j<classrooms.GetArrayLength(); j++) {
+                for (int j=0; j<classrooms.GetArrayLength(); j++) {
                     string cl_room2 = Classrooms[j].Number;
                     if (string.Equals(cl_room, cl_room2)) {
                         found_classroom = Classrooms[j];
@@ -69,7 +69,7 @@ namespace SchoolPlanner.Models {
                 }
                 // finding classes
                 var cl = lessons[i].GetProperty("class").GetString();
-                for(int j=0; j<classes.GetArrayLength(); j++) {
+                for (int j=0; j<classes.GetArrayLength(); j++) {
                     string cl2 = Classes[j].Name;
                     if (string.Equals(cl, cl2)) {
                         found_class = Classes[j];
@@ -78,7 +78,7 @@ namespace SchoolPlanner.Models {
                 } 
                 // finding subjects
                 var subj = lessons[i].GetProperty("subject").GetString();
-                for(int j=0; j<subjects.GetArrayLength(); j++) {
+                for (int j=0; j<subjects.GetArrayLength(); j++) {
                     string subj2 = Subjects[j];
                     if (string.Equals(subj, subj2)) {
                         found_subject = Subjects[j];
@@ -87,7 +87,7 @@ namespace SchoolPlanner.Models {
                 }  
                 // finfing teachers
                 var t = lessons[i].GetProperty("teacher").GetString();
-                for(int j=0; j<teachers.GetArrayLength(); j++) {
+                for (int j=0; j<teachers.GetArrayLength(); j++) {
                     string t2 = Teachers[j].Surname;
                     if (string.Equals(t, t2)) {
                         found_teacher = Teachers[j];
@@ -95,7 +95,7 @@ namespace SchoolPlanner.Models {
                     }
                 }   
                 int slot = lessons[i].GetProperty("slot").GetInt16();
-                if(found_classroom!=null && found_class!=null && !String.IsNullOrEmpty(found_subject) && found_teacher!=null) {
+                if (found_classroom!=null && found_class!=null && !String.IsNullOrEmpty(found_subject) && found_teacher!=null) {
                     Lessons.Add(new Lesson(found_classroom, found_class, found_subject, slot, found_teacher));
                 }
                 else {
@@ -104,12 +104,17 @@ namespace SchoolPlanner.Models {
             }
         }
 
-        public List<Lesson> getLessonsByClass(string _class) { // change for (__Class _class) (but then @Html.DropDownListFor in Index.cshtml is not working)
+        public List<Lesson> getLessonsByClass(string _class) { // TODO: change for (__Class _class) (but then @Html.DropDownListFor in Index.cshtml is not working)
             List<Lesson> chosen_lessons = new List<Lesson>();
-            foreach(Lesson lesson in Lessons) {
-                if(lesson._Class.Name.Equals(_class)) {
+            Console.WriteLine("UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU");
+            foreach (Lesson lesson in Lessons) {
+                if (lesson._Class.Name.Equals(_class)) {
+                    Console.WriteLine("tak");
                     chosen_lessons.Add(lesson);
                     Console.WriteLine(lesson.Slot);
+                }
+                else {
+                    Console.WriteLine("nie");
                 }
             }
             return chosen_lessons;
