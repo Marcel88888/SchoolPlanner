@@ -1,8 +1,4 @@
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SchoolPlanner.Models;
@@ -25,9 +21,11 @@ namespace SchoolPlanner.Controllers {
         public IActionResult Index(Edit edit, Reader reader) {
             if (edit.ClassroomToAdd != null) {
                 reader.Classrooms.Add(new Classroom(edit.ClassroomToAdd));
-                foreach(Classroom classroom in reader.Classrooms) {
-                    Console.WriteLine(classroom.Number);
-                }
+                reader.updateJSONFile();
+            }
+            if (edit.ClassroomToDelete != null) {
+                reader.Classrooms.RemoveAll(x => x.Number == edit.ClassroomToDelete);
+                reader.updateJSONFile();
             }
             return View(edit);
         }

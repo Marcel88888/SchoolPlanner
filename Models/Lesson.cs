@@ -1,14 +1,19 @@
-using System;
+using System.Text.Json.Serialization;
 
 namespace SchoolPlanner.Models {
     public class Lesson {
-        public Classroom Classroom { get; set; }
-        public _Class _Class { get; set; }
+        [JsonPropertyName("classroom")]
+        public string Classroom { get; set; }
+        [JsonPropertyName("class")]
+        public string _Class { get; set; }
+        [JsonPropertyName("subject")]
         public string Subject { get; set; }
+        [JsonPropertyName("slot")]
         public int Slot { get; set; }
-        public Teacher Teacher { get; set; }
+        [JsonPropertyName("teacher")]
+        public string Teacher { get; set; }
 
-        public Lesson (Classroom classroom, _Class _class, string subject, int slot, Teacher teacher) {
+        public Lesson (string classroom, string _class, string subject, int slot, string teacher) {
             Classroom = classroom;
             _Class = _class;
             Subject = subject;

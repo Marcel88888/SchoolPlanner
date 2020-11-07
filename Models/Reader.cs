@@ -12,10 +12,10 @@ namespace SchoolPlanner.Models {
         public List<Teacher> Teachers { get; set; }
         public List<Lesson> Lessons { get; set; }
         public string ChosenClass { get; set; }
+        private const string jsonFilePath = "./data/data.json"; 
 
         public Reader() {
 
-            string jsonFilePath = "./data/data.json";
             string json = File.ReadAllText(jsonFilePath);
 
             Classrooms = new List<Classroom>();
@@ -53,17 +53,17 @@ namespace SchoolPlanner.Models {
             // finding objects with the same data as in lessons
             for (int i=0; i<lessons.GetArrayLength(); i++) {
 
-                Classroom found_classroom = new Classroom();
-                _Class found_class = new _Class();
+                string found_classroom = null;
+                string found_class = null;
                 string found_subject = null; 
-                Teacher found_teacher = new Teacher();
+                string found_teacher = null;
 
                 // finding classrooms
                 var cl_room = lessons[i].GetProperty("classroom").GetString();
                 for (int j=0; j<classrooms.GetArrayLength(); j++) {
                     string cl_room2 = Classrooms[j].Number;
                     if (string.Equals(cl_room, cl_room2)) {
-                        found_classroom = Classrooms[j];
+                        found_classroom = Classrooms[j].Number;
                         break;
                     }
                 }
@@ -72,7 +72,7 @@ namespace SchoolPlanner.Models {
                 for (int j=0; j<classes.GetArrayLength(); j++) {
                     string cl2 = Classes[j].Name;
                     if (string.Equals(cl, cl2)) {
-                        found_class = Classes[j];
+                        found_class = Classes[j].Name;
                         break;
                     }
                 } 
@@ -90,7 +90,7 @@ namespace SchoolPlanner.Models {
                 for (int j=0; j<teachers.GetArrayLength(); j++) {
                     string t2 = Teachers[j].Surname;
                     if (string.Equals(t, t2)) {
-                        found_teacher = Teachers[j];
+                        found_teacher = Teachers[j].Surname;
                         break;
                     }
                 }   
@@ -107,11 +107,34 @@ namespace SchoolPlanner.Models {
         public List<Lesson> getLessonsByClass(string _class) { // TODO: change for (__Class _class) (but then @Html.DropDownListFor in Index.cshtml is not working)
             List<Lesson> chosen_lessons = new List<Lesson>();
             foreach (Lesson lesson in Lessons) {
-                if (lesson._Class.Name.Equals(_class)) {
+                if (lesson._Class.Equals(_class)) {
                     chosen_lessons.Add(lesson);
                 }
             }
             return chosen_lessons;
+        }
+
+        public void updateJSONFile() {
+            List<string> classrooms = new List<string>();
+            List<string> classes = new List<string>();
+            List<string> subjects = new List<string>();
+            List<string> teachers = new List<string>();
+            foreach (Classroom classroom in Classrooms) {
+                classrooms.Add(classroom.Number);
+            }
+            foreach (_Class _class in Classes) {
+                classes.Add(_class.Name);
+            }
+            foreach (string subject in Subjects) {
+                subjects.Add(subject);
+            }
+            foreach (Teacher teacher in Teachers) {
+                teachers.Add(teacher.Surname);
+            }
+            JsonData jsonData = new JsonData(classrooms, classes, subjects, teachers, Lessons);
+            using (TextWriter textWriter = new StreamWriter(File.Open(jsonFilePath, FileMode.Truncate))) {
+                textWriter.Write(JsonSerializer.Serialize(jsonData));
+            }
         }
     }
 }

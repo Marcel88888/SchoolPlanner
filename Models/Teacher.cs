@@ -9,5 +9,9 @@ namespace SchoolPlanner.Models {
         public Teacher(string surname) {
             Surname = surname;
         }
+
+        public override string ToString() {
+            return Surname;
+        }  
     }
 }
