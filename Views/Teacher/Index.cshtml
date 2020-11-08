@@ -1,3 +1,4 @@
+@using System.Collections.Generic
 @using SchoolPlanner.Models
 @model Reader
 
@@ -14,9 +15,17 @@
 
     <h1 class="display-4">TEACHERS</h1>
 
-    @Html.DropDownListFor(model=>model.Teachers, new SelectList(Model.Teachers, "", "Surname"), "Select a teacher", new {htmlAttributes = new {@class="form-control"}})
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true, "", new { @class = "text-danger"} )
 
-    <table style="width:600px height:300px align:center">
+        @Html.DropDownListFor(model=>model.ChosenTeacher, new SelectList(Model.Teachers, "", "Surname"), "Select the teacher", new {htmlAttributes = new {@class="form-control"}})
+        <button type="submit" class="btn btn-primary">Select</button>
+    }
+
+    @{var chosen_lessons = ViewData["chosen_lessons"] as List<Lesson>;}
+
+    <table>
         <thead>
             <th></th>
             <th>Monday</th>
@@ -25,7 +34,8 @@
             <th>Thursday</th>
             <th>Friday</th>
         </thead>
-        @for(int i=0; i<9; i++) {
+        @{int slot_number = 0;}
+        @for (int i=0; i<9; i++) {
             <tr>
                 @switch(i) {
                     case 0:
@@ -58,15 +68,29 @@
                     default:
                         break;
                 }
-                @for(int j=0; j<5; ++j) {
+                @for (int j=0; j<5; ++j) {
                     <td>
-                        <button type="button" class="btn btn-primary btn-block"></button>
+                        @{slot_number++;}
+                        @if (chosen_lessons != null) {
+                            bool lesson_found = false;
+                            @foreach (Lesson lesson in chosen_lessons) { // TODO: for loop outside this loops (i, j) and adding contents to buttons by their id 
+                                if (lesson.Slot == slot_number) {
+                                    <button id="@slot_number" type="button" class="btn btn-primary btn-block">@lesson.Classroom @lesson.Subject @lesson._Class</button>
+                                    lesson_found = true;
+                                    break;
+                                }   
+                            }
+                            @if (lesson_found == false) {
+                                <button type="button" class="btn btn-primary btn-block"></button>    
+                            }
+                        }
+                        else {
+                            <button type="button" class="btn btn-primary btn-block"></button>
+                        }
                     </td>
                 }
-                
             </tr>   
             <br>
         }
     </table>
-
 </div>

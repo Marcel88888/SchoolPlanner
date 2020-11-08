@@ -29,6 +29,30 @@ namespace SchoolPlanner.Controllers {
                 reader.Classrooms.RemoveAll(x => x.Number == edit.ClassroomToDelete);
                 reader.updateJsonFile();
             }
+            if (edit.ClassToAdd != null) {
+                reader.Classes.Add(new _Class(edit.ClassToAdd));
+                reader.updateJsonFile();
+            }
+            if (edit.ClassToDelete != null) {
+                reader.Classes.RemoveAll(x => x.Name == edit.ClassToDelete);
+                reader.updateJsonFile();
+            }
+            if (edit.SubjectToAdd != null) {
+                reader.Subjects.Add(edit.SubjectToAdd);
+                reader.updateJsonFile();
+            }
+            if (edit.SubjectToDelete != null) {
+                reader.Subjects.RemoveAll(x => x == edit.SubjectToDelete);
+                reader.updateJsonFile();
+            }
+            if (edit.TeacherToAdd != null) {
+                reader.Teachers.Add(new Teacher(edit.TeacherToAdd));
+                reader.updateJsonFile();
+            }
+            if (edit.TeacherToDelete != null) {
+                reader.Teachers.RemoveAll(x => x.Surname == edit.TeacherToDelete);
+                reader.updateJsonFile();
+            }
             edit._Reader = reader;
             return View(edit);
         }

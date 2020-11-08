@@ -12,6 +12,8 @@ namespace SchoolPlanner.Models {
         public List<Teacher> Teachers { get; set; }
         public List<Lesson> Lessons { get; set; }
         public string ChosenClass { get; set; }
+        public string ChosenClassroom { get; set; }
+        public string ChosenTeacher { get; set; }
         private const string jsonFilePath = "./data/data.json"; 
 
         public Reader() {
@@ -108,6 +110,26 @@ namespace SchoolPlanner.Models {
             List<Lesson> chosen_lessons = new List<Lesson>();
             foreach (Lesson lesson in Lessons) {
                 if (lesson._Class.Equals(_class)) {
+                    chosen_lessons.Add(lesson);
+                }
+            }
+            return chosen_lessons;
+        }
+
+        public List<Lesson> getLessonsByClassroom(string classroom) { // TODO: change for (__Class _class) (but then @Html.DropDownListFor in Index.cshtml is not working)
+            List<Lesson> chosen_lessons = new List<Lesson>();
+            foreach (Lesson lesson in Lessons) {
+                if (lesson.Classroom.Equals(classroom)) {
+                    chosen_lessons.Add(lesson);
+                }
+            }
+            return chosen_lessons;
+        }
+
+        public List<Lesson> getLessonsByTeacher(string teacher) { // TODO: change for (__Class _class) (but then @Html.DropDownListFor in Index.cshtml is not working)
+            List<Lesson> chosen_lessons = new List<Lesson>();
+            foreach (Lesson lesson in Lessons) {
+                if (lesson.Teacher.Equals(teacher)) {
                     chosen_lessons.Add(lesson);
                 }
             }

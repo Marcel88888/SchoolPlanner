@@ -20,6 +20,13 @@ namespace SchoolPlanner.Controllers {
             return View(reader);
         }
 
+        [HttpPost]
+        public IActionResult Index(Reader reader) {
+            ViewData["chosen_teacher"] = reader.ChosenTeacher;
+            ViewData["chosen_lessons"] = reader.getLessonsByTeacher(reader.ChosenTeacher);
+            return View(reader);
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error() {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
