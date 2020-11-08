@@ -114,7 +114,7 @@ namespace SchoolPlanner.Models {
             return chosen_lessons;
         }
 
-        public void updateJSONFile() {
+        public void updateJsonFile() {
             List<string> classrooms = new List<string>();
             List<string> classes = new List<string>();
             List<string> subjects = new List<string>();

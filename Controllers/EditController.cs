@@ -2,6 +2,7 @@ using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SchoolPlanner.Models;
+using System;
 
 namespace SchoolPlanner.Controllers {
     public class EditController : Controller {
@@ -14,6 +15,7 @@ namespace SchoolPlanner.Controllers {
         public IActionResult Index() {
             Edit edit = new Edit();
             Reader reader = new Reader();
+            edit._Reader = reader;
             return View(edit);
         }
 
@@ -21,12 +23,13 @@ namespace SchoolPlanner.Controllers {
         public IActionResult Index(Edit edit, Reader reader) {
             if (edit.ClassroomToAdd != null) {
                 reader.Classrooms.Add(new Classroom(edit.ClassroomToAdd));
-                reader.updateJSONFile();
+                reader.updateJsonFile();
             }
             if (edit.ClassroomToDelete != null) {
                 reader.Classrooms.RemoveAll(x => x.Number == edit.ClassroomToDelete);
-                reader.updateJSONFile();
+                reader.updateJsonFile();
             }
+            edit._Reader = reader;
             return View(edit);
         }
 
