@@ -7,13 +7,14 @@ namespace SchoolPlanner.Models {
     public class Reader {
 
         public List<Classroom> Classrooms { get; set; }
-        public List<_Class> Classes { get; set; }
+        public List<Class> Classes { get; set; }
         public List<string> Subjects { get; set; }
         public List<Teacher> Teachers { get; set; }
         public List<Lesson> Lessons { get; set; }
         public string ChosenClass { get; set; }
         public string ChosenClassroom { get; set; }
         public string ChosenTeacher { get; set; }
+        public int ChosenLessonIndex { get; set; }
         private const string jsonFilePath = "./data/data.json"; 
 
         public Reader() {
@@ -21,7 +22,7 @@ namespace SchoolPlanner.Models {
             string json = File.ReadAllText(jsonFilePath);
 
             Classrooms = new List<Classroom>();
-            Classes = new List<_Class>();
+            Classes = new List<Class>();
             Subjects = new List<string>();
             Teachers = new List<Teacher>();
             Lessons = new List<Lesson>();
@@ -41,7 +42,7 @@ namespace SchoolPlanner.Models {
             }
 
             for (int i=0; i<classes.GetArrayLength(); i++) {
-                Classes.Add(new _Class(classes[i].GetString()));
+                Classes.Add(new Class(classes[i].GetString()));
             }
 
             for (int i=0; i<subjects.GetArrayLength(); i++) {
@@ -109,7 +110,7 @@ namespace SchoolPlanner.Models {
         public List<Lesson> getLessonsByClass(string _class) { // TODO: change for (__Class _class) (but then @Html.DropDownListFor in Index.cshtml is not working)
             List<Lesson> chosen_lessons = new List<Lesson>();
             foreach (Lesson lesson in Lessons) {
-                if (lesson._Class.Equals(_class)) {
+                if (lesson.Class.Equals(_class)) {
                     chosen_lessons.Add(lesson);
                 }
             }
@@ -144,7 +145,7 @@ namespace SchoolPlanner.Models {
             foreach (Classroom classroom in Classrooms) {
                 classrooms.Add(classroom.Number);
             }
-            foreach (_Class _class in Classes) {
+            foreach (Class _class in Classes) {
                 classes.Add(_class.Name);
             }
             foreach (string subject in Subjects) {

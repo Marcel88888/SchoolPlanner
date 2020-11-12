@@ -30,7 +30,7 @@ namespace SchoolPlanner.Controllers {
                 reader.updateJsonFile();
             }
             if (edit.ClassToAdd != null) {
-                reader.Classes.Add(new _Class(edit.ClassToAdd));
+                reader.Classes.Add(new Class(edit.ClassToAdd));
                 reader.updateJsonFile();
             }
             if (edit.ClassToDelete != null) {

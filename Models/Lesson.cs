@@ -5,7 +5,7 @@ namespace SchoolPlanner.Models {
         [JsonPropertyName("classroom")]
         public string Classroom { get; set; }
         [JsonPropertyName("class")]
-        public string _Class { get; set; }
+        public string Class { get; set; }
         [JsonPropertyName("subject")]
         public string Subject { get; set; }
         [JsonPropertyName("slot")]
@@ -13,9 +13,11 @@ namespace SchoolPlanner.Models {
         [JsonPropertyName("teacher")]
         public string Teacher { get; set; }
 
+        public Lesson() {}
+
         public Lesson (string classroom, string _class, string subject, int slot, string teacher) {
             Classroom = classroom;
-            _Class = _class;
+            Class = _class;
             Subject = subject;
             Slot = slot;
             Teacher = teacher;

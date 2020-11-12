@@ -73,15 +73,16 @@
                         @{slot_number++;}
                         @if (chosen_lessons != null) {
                             bool lesson_found = false;
-                            @foreach (Lesson lesson in chosen_lessons) { // TODO: for loop outside this loops (i, j) and adding contents to buttons by their id 
-                                if (lesson.Slot == slot_number) {
-                                    <button id="@slot_number" type="button" class="btn btn-primary btn-block">@lesson.Classroom @lesson.Subject</button>
+                            @for (int k=0; k<chosen_lessons.Count; ++k) { // TODO: for loop outside this loops (i, j) and adding contents to buttons by their id 
+                                if (chosen_lessons[k].Slot == slot_number) {
+                                    Model.ChosenLessonIndex = k;
+                                    <button type="button" class="btn btn-primary btn-block" onclick="location.href='@Url.Action("EditLesson", "Class")'">@chosen_lessons[k].Classroom @chosen_lessons[k].Subject</button> 
                                     lesson_found = true;
                                     break;
                                 }   
                             }
                             @if (lesson_found == false) {
-                                <button type="button" class="btn btn-primary btn-block"></button>    
+                                <button type="button" class="btn btn-primary btn-block" onclick="location.href='@Url.Action("AddLesson", "Class")'"></button>  
                             }
                         }
                         else {

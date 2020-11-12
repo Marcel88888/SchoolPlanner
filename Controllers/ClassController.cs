@@ -24,7 +24,33 @@ namespace SchoolPlanner.Controllers {
         public IActionResult Index(Reader reader) {
             ViewData["chosen_class"] = reader.ChosenClass;
             ViewData["chosen_lessons"] = reader.getLessonsByClass(reader.ChosenClass);
+            Console.WriteLine("juhu");
             return View(reader);
+        }
+
+        public IActionResult AddLesson(Reader reader) {
+            return View(reader);
+        }
+
+        public IActionResult EditLesson(Reader reader) {
+            ViewData["lessonToEditIndex"] = reader.ChosenLessonIndex;
+            Console.WriteLine("AAA");
+            return View(reader);
+        }
+
+        [HttpPost]
+        public IActionResult SubmitEditingLesson(Reader reader) {
+            Console.WriteLine("#####################");
+            Console.WriteLine("BBB");
+            foreach (Lesson lesson in reader.Lessons) {
+                Console.WriteLine(lesson.Subject);
+            }
+            reader.updateJsonFile();
+            Console.WriteLine("-------------------------");
+            foreach (Lesson lesson in reader.Lessons) {
+                Console.WriteLine(lesson.Subject);
+            }
+            return RedirectToAction("Index", new { reader = reader });
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

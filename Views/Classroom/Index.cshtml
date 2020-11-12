@@ -75,7 +75,7 @@
                             bool lesson_found = false;
                             @foreach (Lesson lesson in chosen_lessons) { // TODO: for loop outside this loops (i, j) and adding contents to buttons by their id 
                                 if (lesson.Slot == slot_number) {
-                                    <button id="@slot_number" type="button" class="btn btn-primary btn-block">@lesson._Class</button>
+                                    <button id="@slot_number" type="button" class="btn btn-primary btn-block">@lesson.Class</button>
                                     lesson_found = true;
                                     break;
                                 }   

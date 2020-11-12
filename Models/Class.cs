@@ -1,12 +1,12 @@
 using System;
 
 namespace SchoolPlanner.Models {
-    public class _Class {
+    public class Class {
         public string Name { get; set; }
 
-        public _Class() {}
+        public Class() {}
 
-        public _Class(string name) {
+        public Class(string name) {
             Name = name;
         }
     }
