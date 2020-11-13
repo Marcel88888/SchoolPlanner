@@ -15,11 +15,12 @@
 
     <h1 class="display-4">CLASSES</h1>
 
+    @* @using (Html.BeginForm("Index", "Class", new { _class = Model.ChosenClass })) { // TODO *@
     @using (Html.BeginForm()) {
         @Html.AntiForgeryToken()
         @Html.ValidationSummary(true, "", new { @class = "text-danger"} )
 
-        @Html.DropDownListFor(model=>model.ChosenClass, new SelectList(Model.Classes, "", "Name"), "Select the class", new {htmlAttributes = new {@class="form-control"}})
+        @Html.DropDownListFor(model=>model.ChosenClass, new SelectList(Model.Classes, "Name", "Name"), "Select the class", new {htmlAttributes = new {@class="form-control"}})
         <button type="submit" class="btn btn-primary">Select</button>
     }
 
@@ -77,25 +78,22 @@
                             @foreach (Lesson lesson in chosen_lessons) { // TODO: for loop outside this loops (i, j) and adding contents to buttons by their id 
                                 int? z = null;
                                 if (lesson.Slot == slot_number) {
-                                    //Model.ChosenLessonIndex = k;
                                     for (int k=0; k<all_lessons.Count; ++k) {
                                         if (Object.Equals(lesson, all_lessons[k])) {
                                             z = k;
                                             break;
                                         }
                                     }
-                                    <button type="button" class="btn btn-primary btn-block" onclick="location.href='@Url.Action("EditLesson", "Class", new { id = z})'">@lesson.Classroom @lesson.Subject</button> 
+                                    <button type="button" class="btn btn-primary btn-block" onclick="location.href='@Url.Action("EditLesson", "Class", new { id = z })'">@lesson.Classroom @lesson.Subject</button> 
                                     lesson_found = true;
                                     break;
                                 }   
                             }
-                            @if (lesson_found == false) {
-                                <button type="button" class="btn btn-primary btn-block" onclick="location.href='@Url.Action("AddLesson", "Class")'"></button>  
-                            }
+                                @if (lesson_found == false) {
+                                    <button type="button" class="btn btn-primary btn-block" onclick="location.href='@Url.Action("AddLesson", "Class")'"></button>  
+                                }
                         }
-                        else {
-                            <button type="button" class="btn btn-primary btn-block"></button>
-                        }
+                        else { <button type="button" class="btn btn-primary btn-block"></button> }
                     </td>
                 }
             </tr>   

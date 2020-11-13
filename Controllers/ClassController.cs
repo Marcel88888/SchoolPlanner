@@ -1,8 +1,5 @@
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SchoolPlanner.Models;
@@ -16,14 +13,14 @@ namespace SchoolPlanner.Controllers {
         }
 
         public IActionResult Index() {
+            Console.WriteLine("AAAAAAAAA");
             Reader reader = new Reader();
             return View(reader);
         }
 
         [HttpPost]
-        public IActionResult Index(Reader reader) {
+        public IActionResult Index(Reader reader) {     // TODO: add "string _class" as a parameter 
             ViewData["all_lessons"] = reader.Lessons;
-            ViewData["chosen_class"] = reader.ChosenClass;
             ViewData["chosen_lessons"] = reader.getLessonsByClass(reader.ChosenClass);
             return View(reader);
         }
@@ -38,14 +35,18 @@ namespace SchoolPlanner.Controllers {
         }
 
         [HttpPost]
-        public IActionResult SubmitEditingLesson(Lesson editedLesson, int id, Reader reader) {
+        public IActionResult SubmitEditingLesson(Reader reader, Lesson editedLesson, int id) {
             reader.Lessons[id].Classroom = editedLesson.Classroom;
             reader.Lessons[id].Class = editedLesson.Class;
             reader.Lessons[id].Subject = editedLesson.Subject;
             reader.Lessons[id].Teacher = editedLesson.Teacher;
-            foreach (Lesson lesson in reader.Lessons) {
-                Console.WriteLine(lesson.Subject);
-            }
+            reader.updateJsonFile();
+            return RedirectToAction("Index");
+            // TODO: return RedirectToAction("Index", new { _class = reader.Lessons[id].Class }); 
+        }
+
+        public IActionResult DeleteLesson(Reader reader, int id) {
+            reader.Lessons.RemoveAt(id);
             reader.updateJsonFile();
             return RedirectToAction("Index");
         }
