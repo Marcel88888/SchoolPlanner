@@ -14,7 +14,7 @@ namespace SchoolPlanner.Models {
         public string ChosenClass { get; set; }
         public string ChosenClassroom { get; set; }
         public string ChosenTeacher { get; set; }
-        public int ChosenLessonIndex { get; set; }
+        public Lesson EditedLesson { get; set; }
         private const string jsonFilePath = "./data/data.json"; 
 
         public Reader() {

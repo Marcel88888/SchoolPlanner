@@ -22,9 +22,9 @@ namespace SchoolPlanner.Controllers {
 
         [HttpPost]
         public IActionResult Index(Reader reader) {
+            ViewData["all_lessons"] = reader.Lessons;
             ViewData["chosen_class"] = reader.ChosenClass;
             ViewData["chosen_lessons"] = reader.getLessonsByClass(reader.ChosenClass);
-            Console.WriteLine("juhu");
             return View(reader);
         }
 
@@ -32,25 +32,22 @@ namespace SchoolPlanner.Controllers {
             return View(reader);
         }
 
-        public IActionResult EditLesson(Reader reader) {
-            ViewData["lessonToEditIndex"] = reader.ChosenLessonIndex;
-            Console.WriteLine("AAA");
+        public IActionResult EditLesson(Reader reader, int id) {
+            ViewData["lessonToEditIndex"] = id;
             return View(reader);
         }
 
         [HttpPost]
-        public IActionResult SubmitEditingLesson(Reader reader) {
-            Console.WriteLine("#####################");
-            Console.WriteLine("BBB");
+        public IActionResult SubmitEditingLesson(Lesson editedLesson, int id, Reader reader) {
+            reader.Lessons[id].Classroom = editedLesson.Classroom;
+            reader.Lessons[id].Class = editedLesson.Class;
+            reader.Lessons[id].Subject = editedLesson.Subject;
+            reader.Lessons[id].Teacher = editedLesson.Teacher;
             foreach (Lesson lesson in reader.Lessons) {
                 Console.WriteLine(lesson.Subject);
             }
             reader.updateJsonFile();
-            Console.WriteLine("-------------------------");
-            foreach (Lesson lesson in reader.Lessons) {
-                Console.WriteLine(lesson.Subject);
-            }
-            return RedirectToAction("Index", new { reader = reader });
+            return RedirectToAction("Index");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

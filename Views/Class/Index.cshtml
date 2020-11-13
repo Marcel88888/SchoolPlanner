@@ -23,6 +23,7 @@
         <button type="submit" class="btn btn-primary">Select</button>
     }
 
+    @{var all_lessons = ViewData["all_lessons"] as List<Lesson>;}
     @{var chosen_lessons = ViewData["chosen_lessons"] as List<Lesson>;}
 
     <table>
@@ -73,10 +74,17 @@
                         @{slot_number++;}
                         @if (chosen_lessons != null) {
                             bool lesson_found = false;
-                            @for (int k=0; k<chosen_lessons.Count; ++k) { // TODO: for loop outside this loops (i, j) and adding contents to buttons by their id 
-                                if (chosen_lessons[k].Slot == slot_number) {
-                                    Model.ChosenLessonIndex = k;
-                                    <button type="button" class="btn btn-primary btn-block" onclick="location.href='@Url.Action("EditLesson", "Class")'">@chosen_lessons[k].Classroom @chosen_lessons[k].Subject</button> 
+                            @foreach (Lesson lesson in chosen_lessons) { // TODO: for loop outside this loops (i, j) and adding contents to buttons by their id 
+                                int? z = null;
+                                if (lesson.Slot == slot_number) {
+                                    //Model.ChosenLessonIndex = k;
+                                    for (int k=0; k<all_lessons.Count; ++k) {
+                                        if (Object.Equals(lesson, all_lessons[k])) {
+                                            z = k;
+                                            break;
+                                        }
+                                    }
+                                    <button type="button" class="btn btn-primary btn-block" onclick="location.href='@Url.Action("EditLesson", "Class", new { id = z})'">@lesson.Classroom @lesson.Subject</button> 
                                     lesson_found = true;
                                     break;
                                 }   
