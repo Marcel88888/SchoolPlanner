@@ -10,19 +10,19 @@
 
 @{ int lessonToEditIndex = (int)ViewData["lessonToEditIndex"]; }
 
-@using (Html.BeginForm("SubmitEditingLesson", "Class", new { editedLesson = Model.EditedLesson, id = lessonToEditIndex})) {
+@using (Html.BeginForm("SubmitEditingLesson", "Classroom", new { editedLesson = Model.EditedLesson, id = lessonToEditIndex})) {
     @Html.AntiForgeryToken()
     @Html.ValidationSummary(true, "", new { @class = "text-danger"} )
 
-    <button type="button" class="btn btn-secondary" onclick="location.href='@Url.Action("Index", "Class" )'">Cancel</button><br><br> @* TODO: Index with class id *@
+    <button type="button" class="btn btn-secondary" onclick="location.href='@Url.Action("Index", "Classroom" )'">Cancel</button><br><br> @* TODO: Index with class id *@
 
-    <strong>@Html.LabelFor(model=>model.EditedLesson.Classroom, "Classroom")</strong><br>
-    @Html.DropDownListFor(model=>model.EditedLesson.Classroom, new SelectList(Model.Classrooms, "Number", "Number", Model.Lessons[lessonToEditIndex].Classroom), "Select the classroom", new {htmlAttributes = new {@class="form-control"}})<br><br>
+    <strong>@Html.LabelFor(model=>model.EditedLesson.Class, "Class")</strong><br>
+    @Html.DropDownListFor(model=>model.EditedLesson.Class, new SelectList(Model.Classes, "Name", "Name", Model.Lessons[lessonToEditIndex].Class), "Select the class", new {htmlAttributes = new {@class="form-control"}})<br><br>
     <strong>@Html.LabelFor(model=>model.EditedLesson.Subject, "Subject")</strong><br>
     @Html.DropDownListFor(model=>model.EditedLesson.Subject, new SelectList(Model.Subjects, Model.Lessons[lessonToEditIndex].Subject), "Select the subject", new {htmlAttributes = new {@class="form-control"}})<br><br>
     <strong>@Html.LabelFor(model=>model.EditedLesson.Teacher, "Teacher")</strong><br>
     @Html.DropDownListFor(model=>model.EditedLesson.Teacher, new SelectList(Model.Teachers, "Surname", "Surname", Model.Lessons[lessonToEditIndex].Teacher), "Select the teacher", new {htmlAttributes = new {@class="form-control"}})<br><br>
 
     <button type="submit" class="btn btn-primary">Edit</button>
-    <button type="button" class="btn btn-danger" onclick="location.href='@Url.Action("DeleteLesson", "Class", new { id = lessonToEditIndex })'">Delete</button>
+    <button type="button" class="btn btn-danger" onclick="location.href='@Url.Action("DeleteLesson", "Classroom", new { id = lessonToEditIndex })'">Delete</button>
 }

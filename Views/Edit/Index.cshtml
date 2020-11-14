@@ -48,7 +48,7 @@
                     }
                 </div>
                 <div id="delete_classroom" class="tab-pane fade">
-                    <h3>Delete a classroom:</h3>
+                    <h3>Delete the classroom:</h3>
                     @using (Html.BeginForm()) {
                         @Html.AntiForgeryToken()
                         @Html.ValidationSummary(true, "", new { @class = "text-danger"} )
@@ -112,7 +112,7 @@
                     }
                 </div>
                 <div id="delete_subject" class="tab-pane fade">
-                    <h3>Delete a subject:</h3>
+                    <h3>Delete the subject:</h3>
                     @using (Html.BeginForm()) {
                         @Html.AntiForgeryToken()
                         @Html.ValidationSummary(true, "", new { @class = "text-danger"} )
