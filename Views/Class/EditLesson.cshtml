@@ -10,7 +10,7 @@
 
 @{ int lessonToEditIndex = (int)ViewData["lessonToEditIndex"]; }
 
-@using (Html.BeginForm("SubmitEditingLesson", "Class", new { editedLesson = Model.EditedLesson, id = lessonToEditIndex})) {
+@using (Html.BeginForm("ValidateEditedData", "Class", new { editedLesson = Model.EditedLesson, id = lessonToEditIndex })) {
     @Html.AntiForgeryToken()
     @Html.ValidationSummary(true, "", new { @class = "text-danger"} )
 

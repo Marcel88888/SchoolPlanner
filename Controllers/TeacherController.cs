@@ -53,7 +53,7 @@ namespace SchoolPlanner.Controllers {
             reader.Lessons[id].Subject = editedLesson.Subject;
             reader.updateJsonFile();
             return RedirectToAction("Index");
-            // TODO: return RedirectToAction("Index", new { _class = reader.Lessons[id].Class }); 
+            // TODO: return RedirectToAction("Index", new { _class = reader.Lessons[id].Teacher }); 
         }
 
         public IActionResult DeleteLesson(Reader reader, int id) {
