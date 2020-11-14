@@ -1,0 +1,10 @@
+@{
+    ViewData["Title"] = "Error";
+}
+
+<div class="text-center">
+    <div class="alert alert-danger">
+        <strong>Error!</strong> You did not select all values.
+    </div>
+    <button type="button" class="btn btn-secondary" onclick="location.href='@Url.Action("AddLesson", "Class", new { chosenClass = ViewData["chosen_class"], slot = ViewData["slot"] })'">Return</button><br><br> @* TODO: Index with class id *@
+</div>

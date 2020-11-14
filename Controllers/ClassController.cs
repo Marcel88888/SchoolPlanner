@@ -33,6 +33,7 @@ namespace SchoolPlanner.Controllers {
                 foreach (Lesson lesson in reader.Lessons) {
                     if (classroom.Number == lesson.Classroom && slot == lesson.Slot) {
                         classroomAvailable = false;
+                        break;
                     }
                 }
                 if (classroomAvailable) {
@@ -45,6 +46,7 @@ namespace SchoolPlanner.Controllers {
                 foreach (Lesson lesson in reader.Lessons) {
                     if (teacher.Surname == lesson.Teacher && slot == lesson.Slot) {
                         teacherAvailable = false;
+                        break;
                     }
                 }
                 if (teacherAvailable) {
@@ -72,8 +74,6 @@ namespace SchoolPlanner.Controllers {
         }
 
         public IActionResult UnsuccessfulLessonAdding(Reader reader, string chosenClass, int slot) {
-            Console.WriteLine("Chosen class: " + chosenClass);
-            Console.WriteLine("Slot: " + slot.ToString());
             ViewData["chosen_class"] = chosenClass;
             ViewData["slot"] = slot;
             return View();
@@ -81,11 +81,14 @@ namespace SchoolPlanner.Controllers {
 
         public IActionResult EditLesson(Reader reader, int id) {
             reader.ClassroomsOptions = new List<Classroom>();
+            Classroom selectedClassroom = new Classroom(reader.Lessons[id].Classroom);
+            reader.ClassroomsOptions.Add(selectedClassroom);
             foreach (Classroom classroom in reader.Classrooms) {
                 bool classroomAvailable = true;
                 foreach (Lesson lesson in reader.Lessons) {
                     if (classroom.Number == lesson.Classroom && reader.Lessons[id].Slot == lesson.Slot) {
                         classroomAvailable = false;
+                        break;
                     }
                 }
                 if (classroomAvailable) {
@@ -93,11 +96,14 @@ namespace SchoolPlanner.Controllers {
                 }
             }
             reader.TeachersOptions = new List<Teacher>();
+            Teacher selectedTeacher = new Teacher(reader.Lessons[id].Teacher);
+            reader.TeachersOptions.Add(selectedTeacher);
             foreach (Teacher teacher in reader.Teachers) {
                 bool teacherAvailable = true;
                 foreach (Lesson lesson in reader.Lessons) {
                     if (teacher.Surname == lesson.Teacher && reader.Lessons[id].Slot == lesson.Slot) {
                         teacherAvailable = false;
+                        break;
                     }
                 }
                 if (teacherAvailable) {

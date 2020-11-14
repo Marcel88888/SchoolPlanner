@@ -21,39 +21,109 @@ namespace SchoolPlanner.Controllers {
         }
 
         [HttpPost]
-        public IActionResult Index(Reader reader) {     // TODO: add "string _classroom" as a parameter 
+        public IActionResult Index(Reader reader) {     
             ViewData["all_lessons"] = reader.Lessons;
             ViewData["chosen_lessons"] = reader.getLessonsByClassroom(reader.ChosenClassroom);
             return View(reader);
         }
 
-        public IActionResult AddLesson(Reader reader, int slot, string chosenClassroom) {
-            ViewData["slot"] = slot;
+        public IActionResult AddLesson(Reader reader, string chosenClassroom, int slot) {
+            reader.ClassesOptions = new List<Class>();
+            foreach (Class _class in reader.Classes) {
+                bool classAvailable = true;
+                foreach (Lesson lesson in reader.Lessons) {
+                    if (_class.Name == lesson.Class && slot == lesson.Slot) {
+                        classAvailable = false;
+                        break;
+                    }
+                }
+                if (classAvailable) {
+                    reader.ClassesOptions.Add(_class);
+                }
+            }
+            reader.TeachersOptions = new List<Teacher>();
+            foreach (Teacher teacher in reader.Teachers) {
+                bool teacherAvailable = true;
+                foreach (Lesson lesson in reader.Lessons) {
+                    if (teacher.Surname == lesson.Teacher && slot == lesson.Slot) {
+                        teacherAvailable = false;
+                        break;
+                    }
+                }
+                if (teacherAvailable) {
+                    reader.TeachersOptions.Add(teacher);
+                }
+            }
             ViewData["chosen_classroom"] = chosenClassroom;
+            ViewData["slot"] = slot;
             return View(reader);
         }
 
-        public IActionResult SubmitAddingLesson(Reader reader, int slot, string chosenClassroom) {
+        public IActionResult SuccessfulLessonAdding(Reader reader, string chosenClassroom, int slot) {
+            reader.NewLesson = new Lesson();
+            string _class = (string)TempData["class"];
+            string subject = (string)TempData["subject"];
+            string teacher = (string)TempData["teacher"];
             reader.NewLesson.Classroom = chosenClassroom;
+            reader.NewLesson.Class = _class;
+            reader.NewLesson.Subject = subject;
             reader.NewLesson.Slot = slot;
+            reader.NewLesson.Teacher = teacher;
             reader.Lessons.Add(reader.NewLesson);
             reader.updateJsonFile();
-            return RedirectToAction("Index");       // TODO: Index with classroom
+            return View();     
+        }
+
+        public IActionResult UnsuccessfulLessonAdding(Reader reader, string chosenClassroom, int slot) {
+            ViewData["chosen_classroom"] = chosenClassroom;
+            ViewData["slot"] = slot;
+            return View();
         }
 
         public IActionResult EditLesson(Reader reader, int id) {
+            reader.ClassesOptions = new List<Class>();
+            foreach (Class _class in reader.Classes) {
+                bool classAvailable = true;
+                foreach (Lesson lesson in reader.Lessons) {
+                    if (_class.Name == lesson.Class && reader.Lessons[id].Slot == lesson.Slot) {
+                        classAvailable = false;
+                        break;
+                    }
+                }
+                if (classAvailable) {
+                    reader.ClassesOptions.Add(_class);
+                }
+            }
+            reader.TeachersOptions = new List<Teacher>();
+            foreach (Teacher teacher in reader.Teachers) {
+                bool teacherAvailable = true;
+                foreach (Lesson lesson in reader.Lessons) {
+                    if (teacher.Surname == lesson.Teacher && reader.Lessons[id].Slot == lesson.Slot) {
+                        teacherAvailable = false;
+                    }
+                }
+                if (teacherAvailable) {
+                    reader.TeachersOptions.Add(teacher);
+                }
+            }
             ViewData["lessonToEditIndex"] = id;
             return View(reader);
         }
 
-        [HttpPost]
-        public IActionResult SubmitEditingLesson(Reader reader, Lesson editedLesson, int id) {
-            reader.Lessons[id].Class = editedLesson.Class;
-            reader.Lessons[id].Subject = editedLesson.Subject;
-            reader.Lessons[id].Teacher = editedLesson.Teacher;
+        public IActionResult SuccessfulLessonEdit(Reader reader, int id) {
+            string _class = (string)TempData["class"];
+            string subject = (string)TempData["subject"];
+            string teacher = (string)TempData["teacher"];
+            reader.Lessons[id].Class = _class;
+            reader.Lessons[id].Subject = subject;
+            reader.Lessons[id].Teacher = teacher;
             reader.updateJsonFile();
-            return RedirectToAction("Index");
-            // TODO: return RedirectToAction("Index", new { _class = reader.Lessons[id].Class }); 
+            return View();
+        }
+
+        public IActionResult UnsuccessfulLessonEdit(Reader reader, int id) {
+            ViewData["id"] = id;
+            return View();
         }
 
         public IActionResult DeleteLesson(Reader reader, int id) {
