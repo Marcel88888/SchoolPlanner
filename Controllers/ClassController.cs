@@ -46,7 +46,6 @@ namespace SchoolPlanner.Controllers {
         [HttpPost]
         public IActionResult SubmitEditingLesson(Reader reader, Lesson editedLesson, int id) {
             reader.Lessons[id].Classroom = editedLesson.Classroom;
-            reader.Lessons[id].Class = editedLesson.Class;
             reader.Lessons[id].Subject = editedLesson.Subject;
             reader.Lessons[id].Teacher = editedLesson.Teacher;
             reader.updateJsonFile();
