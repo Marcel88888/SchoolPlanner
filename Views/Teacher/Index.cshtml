@@ -15,82 +15,88 @@
 
     <h1 class="display-4">TEACHERS</h1>
 
+    @* @using (Html.BeginForm("Index", "Class", new { _class = Model.ChosenTeacher })) { // TODO *@
     @using (Html.BeginForm()) {
         @Html.AntiForgeryToken()
         @Html.ValidationSummary(true, "", new { @class = "text-danger"} )
 
-        @Html.DropDownListFor(model=>model.ChosenTeacher, new SelectList(Model.Teachers, "", "Surname"), "Select the teacher", new {htmlAttributes = new {@class="form-control"}})
+        @Html.DropDownListFor(model=>model.ChosenTeacher, new SelectList(Model.Teachers, "Surname", "Surname"), "Select the teacher", new {htmlAttributes = new {@class="form-control"}})
         <button type="submit" class="btn btn-primary">Select</button>
     }
 
+    @{var all_lessons = ViewData["all_lessons"] as List<Lesson>;}
     @{var chosen_lessons = ViewData["chosen_lessons"] as List<Lesson>;}
 
-    <table>
-        <thead>
-            <th></th>
-            <th>Monday</th>
-            <th>Tuesday</th>
-            <th>Wednesday</th>
-            <th>Thursday</th>
-            <th>Friday</th>
-        </thead>
-        @{int slot_number = 0;}
-        @for (int i=0; i<9; i++) {
-            <tr>
-                @switch(i) {
-                    case 0:
-                        <td><strong>8:00 - 8:45</strong></td>
-                        break;
-                    case 1:
-                        <td><strong>9:00 - 9:45</strong></td>
-                        break;
-                    case 2:
-                        <td><strong>10:00 - 10:45</strong></td>
-                        break;
-                    case 3:
-                        <td><strong>11:00 - 11:45</strong></td>
-                        break;
-                    case 4:
-                        <td><strong>12:00 - 12:45</strong></td>
-                        break;
-                    case 5:
-                        <td><strong>13:00 - 13:45</strong></td>
-                        break;
-                    case 6:
-                        <td><strong>14:00 - 14:45</strong></td>
-                        break;
-                    case 7:
-                        <td><strong>15:00 - 15:45</strong></td>
-                        break;
-                    case 8:
-                        <td><strong>16:00 - 16:45</strong></td>
-                        break;
-                    default:
-                        break;
-                }
-                @for (int j=0; j<5; ++j) {
-                    <td>
-                        @{slot_number++;}
-                        @if (chosen_lessons != null) {
-                            bool lesson_found = false;
+    @if (!String.IsNullOrEmpty(Model.ChosenTeacher)) {
+        <table>
+            <thead>
+                <th></th>
+                <th>Monday</th>
+                <th>Tuesday</th>
+                <th>Wednesday</th>
+                <th>Thursday</th>
+                <th>Friday</th>
+            </thead>
+            @{int slot_number = 0;}
+            @for (int i=0; i<9; i++) {
+                <tr>
+                    @switch(i) {
+                        case 0:
+                            <td><strong>8:00 - 8:45</strong></td>
+                            break;
+                        case 1:
+                            <td><strong>9:00 - 9:45</strong></td>
+                            break;
+                        case 2:
+                            <td><strong>10:00 - 10:45</strong></td>
+                            break;
+                        case 3:
+                            <td><strong>11:00 - 11:45</strong></td>
+                            break;
+                        case 4:
+                            <td><strong>12:00 - 12:45</strong></td>
+                            break;
+                        case 5:
+                            <td><strong>13:00 - 13:45</strong></td>
+                            break;
+                        case 6:
+                            <td><strong>14:00 - 14:45</strong></td>
+                            break;
+                        case 7:
+                            <td><strong>15:00 - 15:45</strong></td>
+                            break;
+                        case 8:
+                            <td><strong>16:00 - 16:45</strong></td>
+                            break;
+                        default:
+                            break;
+                    }
+                    @for (int j=0; j<5; ++j) {
+                        <td>
+                            @{slot_number++;}
+                            @{ bool lesson_found = false; }
                             @foreach (Lesson lesson in chosen_lessons) { // TODO: for loop outside this loops (i, j) and adding contents to buttons by their id 
+                                int? z = null;
                                 if (lesson.Slot == slot_number) {
-                                    <button id="@slot_number" type="button" class="btn btn-primary btn-block">@lesson.Classroom @lesson.Subject @lesson.Class</button>
+                                    for (int k=0; k<all_lessons.Count; ++k) {
+                                        if (Object.Equals(lesson, all_lessons[k])) {
+                                            z = k;
+                                            break;
+                                        }
+                                    }
+                                    <button type="button" class="btn btn-primary btn-block" onclick="location.href='@Url.Action("EditLesson", "Teacher", new { id = z })'">@lesson.Classroom @lesson.Subject @lesson.Class</button> 
                                     lesson_found = true;
                                     break;
                                 }   
                             }
-                            @if (lesson_found == false) {
-                                <button type="button" class="btn btn-primary btn-block"></button>    
-                            }
-                        }
-                        else {
-                            <button type="button" class="btn btn-primary btn-block"></button>
-                        }
-                    </td>
-                }
-            </tr>   
-            <br>
-        }
-    </table>
+                                @if (lesson_found == false) {
+                                    <button type="button" class="btn btn-primary btn-block" onclick="location.href='@Url.Action("AddLesson", "Teacher", new { slot = slot_number, chosenTeacher = Model.ChosenTeacher })'"></button>  
+                                }
+                        </td>
+                    }
+                </tr>   
+                <br>
+            }
+        </table>
+    }
 </div>
