@@ -82,6 +82,8 @@ namespace SchoolPlanner.Controllers {
 
         public IActionResult EditLesson(Reader reader, int id) {
             reader.ClassesOptions = new List<Class>();
+            Class selectedClass = new Class(reader.Lessons[id].Class);
+            reader.ClassesOptions.Add(selectedClass);
             foreach (Class _class in reader.Classes) {
                 bool classAvailable = true;
                 foreach (Lesson lesson in reader.Lessons) {
@@ -95,6 +97,8 @@ namespace SchoolPlanner.Controllers {
                 }
             }
             reader.TeachersOptions = new List<Teacher>();
+            Teacher selectedTeacher = new Teacher(reader.Lessons[id].Teacher);
+            reader.TeachersOptions.Add(selectedTeacher);
             foreach (Teacher teacher in reader.Teachers) {
                 bool teacherAvailable = true;
                 foreach (Lesson lesson in reader.Lessons) {
@@ -130,6 +134,30 @@ namespace SchoolPlanner.Controllers {
             reader.Lessons.RemoveAt(id);
             reader.updateJsonFile();
             return RedirectToAction("Index");
+        }
+
+        public IActionResult ValidateAddedData(Reader reader, Lesson newLesson, string chosenClassroom, int slot) {
+            if (newLesson.Class == null || newLesson.Subject == null || newLesson.Teacher == null) {
+                return RedirectToAction("UnsuccessfulLessonAdding", new { chosenClassroom = chosenClassroom, slot = slot });
+            }
+            else {
+                TempData["class"] = newLesson.Class;
+                TempData["subject"] = newLesson.Subject;
+                TempData["teacher"] = newLesson.Teacher;
+                return RedirectToAction("SuccessfulLessonAdding", new { chosenClassroom = chosenClassroom, slot = slot });
+            }
+        }
+
+        public IActionResult ValidateEditedData(Reader reader, Lesson editedLesson, int id) {
+            if (editedLesson.Class == null || editedLesson.Subject == null || editedLesson.Teacher == null) {
+                return RedirectToAction("UnsuccessfulLessonEdit", new { id = id });
+            }
+            else {
+                TempData["class"] = editedLesson.Class;
+                TempData["subject"] = editedLesson.Subject;
+                TempData["teacher"] = editedLesson.Teacher;
+                return RedirectToAction("SuccessfulLessonEdit", new { id = id });
+            }
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

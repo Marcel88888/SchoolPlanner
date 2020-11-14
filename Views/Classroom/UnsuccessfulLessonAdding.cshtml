@@ -6,5 +6,5 @@
     <div class="alert alert-danger">
         <strong>Error!</strong> You did not select all values.
     </div>
-    <button type="button" class="btn btn-secondary" onclick="location.href='@Url.Action("AddLesson", "Class", new { chosenClass = ViewData["chosen_class"], slot = ViewData["slot"] })'">Return</button><br><br> @* TODO: Index with class id *@
+    <button type="button" class="btn btn-secondary" onclick="location.href='@Url.Action("AddLesson", "Classroom", new { chosenClassroom = ViewData["chosen_classroom"], slot = ViewData["slot"] })'">Return</button><br><br>
 </div>
