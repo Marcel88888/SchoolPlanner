@@ -13,7 +13,6 @@ namespace SchoolPlanner.Controllers {
         }
 
         public IActionResult Index() {
-            Console.WriteLine("AAAAAAAAA");
             Reader reader = new Reader();
             return View(reader);
         }
@@ -25,8 +24,18 @@ namespace SchoolPlanner.Controllers {
             return View(reader);
         }
 
-        public IActionResult AddLesson(Reader reader) {
+        public IActionResult AddLesson(Reader reader, int slot, string chosenClass) {
+            ViewData["slot"] = slot;
+            ViewData["chosen_class"] = chosenClass;
             return View(reader);
+        }
+
+        public IActionResult SubmitAddingLesson(Reader reader, int slot, string chosenClass) {
+            reader.NewLesson.Class = chosenClass;
+            reader.NewLesson.Slot = slot;
+            reader.Lessons.Add(reader.NewLesson);
+            reader.updateJsonFile();
+            return RedirectToAction("Index");       // TODO: Index with class
         }
 
         public IActionResult EditLesson(Reader reader, int id) {
