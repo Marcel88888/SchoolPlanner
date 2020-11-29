@@ -1,8 +1,16 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace SchoolPlanner.Models {
     public class Classroom {
+
+        public int Id { get; set; }
+
+        [Required]
+        [StringLength(30)]
         public string Number { get; set; }
+
+        public DateTime Timestamp { get; set; }
 
         public Classroom() {}
 
