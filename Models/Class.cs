@@ -4,6 +4,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace SchoolPlanner.Models {
     public class Class {
+
+        public int Id { get; set; }
         
         [Required]
         [StringLength(30)]

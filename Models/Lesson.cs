@@ -24,20 +24,19 @@ namespace SchoolPlanner.Models {
         public int TeacherId { get; set; }
 
 
-
         [JsonPropertyName("classroom")]
-        public string Classroom { get; set; }
+        public Classroom Classroom { get; set; }
         [JsonPropertyName("class")]
-        public string Class { get; set; }
+        public Class Class { get; set; }
         [JsonPropertyName("subject")]
-        public string Subject { get; set; }
+        public Subject Subject { get; set; }
         
         [JsonPropertyName("teacher")]
-        public string Teacher { get; set; }
+        public Teacher Teacher { get; set; }
 
         public Lesson() {}
 
-        public Lesson (string classroom, string _class, string subject, int slot, string teacher) {
+        public Lesson (Classroom classroom, Class _class, Subject subject, int slot, Teacher teacher) {
             Classroom = classroom;
             Class = _class;
             Subject = subject;

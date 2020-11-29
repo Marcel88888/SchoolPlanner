@@ -7,9 +7,16 @@ using System;
 namespace SchoolPlanner.Controllers {
     public class EditController : Controller {
         private readonly ILogger<HomeController> _logger;
+        private SchoolPlannerContext _context;
 
-        public EditController(ILogger<HomeController> logger) {
+        public EditController(ILogger<HomeController> logger, SchoolPlannerContext context) {
             _logger = logger;
+            _context = context;
+            var classes = _context.Class;
+            Console.WriteLine("AAAAAAAAAAA");
+            foreach (var c in classes) {
+                Console.WriteLine(c.Name);
+            }
         }
 
         public IActionResult Index() {
@@ -22,8 +29,10 @@ namespace SchoolPlanner.Controllers {
         [HttpPost]
         public IActionResult Index(Edit edit, Reader reader) {
             if (edit.ClassroomToAdd != null) {
-                reader.Classrooms.Add(new Classroom(edit.ClassroomToAdd));
-                reader.updateJsonFile();
+                _context.Classroom.Add(new Classroom {
+                        Number = edit.ClassroomToAdd
+                        });
+                _context.SaveChanges();
             }
             if (edit.ClassroomToDelete != null) {
                 reader.Classrooms.RemoveAll(x => x.Number == edit.ClassroomToDelete);

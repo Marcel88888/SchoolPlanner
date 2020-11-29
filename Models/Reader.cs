@@ -103,7 +103,7 @@ namespace SchoolPlanner.Models {
                 }   
                 int slot = lessons[i].GetProperty("slot").GetInt16();
                 if (found_classroom!=null && found_class!=null && !String.IsNullOrEmpty(found_subject) && found_teacher!=null) {
-                    Lessons.Add(new Lesson(found_classroom, found_class, found_subject, slot, found_teacher));
+                    //Lessons.Add(new Lesson(found_classroom, found_class, found_subject, slot, found_teacher));
                 }
                 else {
                     Console.WriteLine("Error: Lesson defined in the json file contains data that is not defined in the previous sections of the file");

@@ -28,34 +28,34 @@ namespace SchoolPlanner.Controllers {
         }
 
         public IActionResult AddLesson(Reader reader, string chosenClassroom, int slot) {
-            reader.ClassesOptions = new List<Class>();
-            foreach (Class _class in reader.Classes) {
-                bool classAvailable = true;
-                foreach (Lesson lesson in reader.Lessons) {
-                    if (_class.Name == lesson.Class && slot == lesson.Slot) {
-                        classAvailable = false;
-                        break;
-                    }
-                }
-                if (classAvailable) {
-                    reader.ClassesOptions.Add(_class);
-                }
-            }
-            reader.TeachersOptions = new List<Teacher>();
-            foreach (Teacher teacher in reader.Teachers) {
-                bool teacherAvailable = true;
-                foreach (Lesson lesson in reader.Lessons) {
-                    if (teacher.Surname == lesson.Teacher && slot == lesson.Slot) {
-                        teacherAvailable = false;
-                        break;
-                    }
-                }
-                if (teacherAvailable) {
-                    reader.TeachersOptions.Add(teacher);
-                }
-            }
-            ViewData["chosen_classroom"] = chosenClassroom;
-            ViewData["slot"] = slot;
+            // reader.ClassesOptions = new List<Class>();
+            // foreach (Class _class in reader.Classes) {
+            //     bool classAvailable = true;
+            //     foreach (Lesson lesson in reader.Lessons) {
+            //         if (_class.Name == lesson.Class && slot == lesson.Slot) {
+            //             classAvailable = false;
+            //             break;
+            //         }
+            //     }
+            //     if (classAvailable) {
+            //         reader.ClassesOptions.Add(_class);
+            //     }
+            // }
+            // reader.TeachersOptions = new List<Teacher>();
+            // foreach (Teacher teacher in reader.Teachers) {
+            //     bool teacherAvailable = true;
+            //     foreach (Lesson lesson in reader.Lessons) {
+            //         if (teacher.Surname == lesson.Teacher && slot == lesson.Slot) {
+            //             teacherAvailable = false;
+            //             break;
+            //         }
+            //     }
+            //     if (teacherAvailable) {
+            //         reader.TeachersOptions.Add(teacher);
+            //     }
+            // }
+            // ViewData["chosen_classroom"] = chosenClassroom;
+            // ViewData["slot"] = slot;
             return View(reader);
         }
 
@@ -64,11 +64,11 @@ namespace SchoolPlanner.Controllers {
             string _class = (string)TempData["class"];
             string subject = (string)TempData["subject"];
             string teacher = (string)TempData["teacher"];
-            reader.NewLesson.Classroom = chosenClassroom;
-            reader.NewLesson.Class = _class;
-            reader.NewLesson.Subject = subject;
-            reader.NewLesson.Slot = slot;
-            reader.NewLesson.Teacher = teacher;
+            // reader.NewLesson.Classroom = chosenClassroom;
+            // reader.NewLesson.Class = _class;
+            // reader.NewLesson.Subject = subject;
+            // reader.NewLesson.Slot = slot;
+            // reader.NewLesson.Teacher = teacher;
             reader.Lessons.Add(reader.NewLesson);
             reader.updateJsonFile();
             return View();     
@@ -81,36 +81,36 @@ namespace SchoolPlanner.Controllers {
         }
 
         public IActionResult EditLesson(Reader reader, int id) {
-            reader.ClassesOptions = new List<Class>();
-            Class selectedClass = new Class(reader.Lessons[id].Class);
-            reader.ClassesOptions.Add(selectedClass);
-            foreach (Class _class in reader.Classes) {
-                bool classAvailable = true;
-                foreach (Lesson lesson in reader.Lessons) {
-                    if (_class.Name == lesson.Class && reader.Lessons[id].Slot == lesson.Slot) {
-                        classAvailable = false;
-                        break;
-                    }
-                }
-                if (classAvailable) {
-                    reader.ClassesOptions.Add(_class);
-                }
-            }
-            reader.TeachersOptions = new List<Teacher>();
-            Teacher selectedTeacher = new Teacher(reader.Lessons[id].Teacher);
-            reader.TeachersOptions.Add(selectedTeacher);
-            foreach (Teacher teacher in reader.Teachers) {
-                bool teacherAvailable = true;
-                foreach (Lesson lesson in reader.Lessons) {
-                    if (teacher.Surname == lesson.Teacher && reader.Lessons[id].Slot == lesson.Slot) {
-                        teacherAvailable = false;
-                    }
-                }
-                if (teacherAvailable) {
-                    reader.TeachersOptions.Add(teacher);
-                }
-            }
-            ViewData["lessonToEditIndex"] = id;
+            // reader.ClassesOptions = new List<Class>();
+            // Class selectedClass = new Class(reader.Lessons[id].Class);
+            // reader.ClassesOptions.Add(selectedClass);
+            // foreach (Class _class in reader.Classes) {
+            //     bool classAvailable = true;
+            //     foreach (Lesson lesson in reader.Lessons) {
+            //         if (_class.Name == lesson.Class && reader.Lessons[id].Slot == lesson.Slot) {
+            //             classAvailable = false;
+            //             break;
+            //         }
+            //     }
+            //     if (classAvailable) {
+            //         reader.ClassesOptions.Add(_class);
+            //     }
+            // }
+            // reader.TeachersOptions = new List<Teacher>();
+            // Teacher selectedTeacher = new Teacher(reader.Lessons[id].Teacher);
+            // reader.TeachersOptions.Add(selectedTeacher);
+            // foreach (Teacher teacher in reader.Teachers) {
+            //     bool teacherAvailable = true;
+            //     foreach (Lesson lesson in reader.Lessons) {
+            //         if (teacher.Surname == lesson.Teacher && reader.Lessons[id].Slot == lesson.Slot) {
+            //             teacherAvailable = false;
+            //         }
+            //     }
+            //     if (teacherAvailable) {
+            //         reader.TeachersOptions.Add(teacher);
+            //     }
+            // }
+            // ViewData["lessonToEditIndex"] = id;
             return View(reader);
         }
 
@@ -118,9 +118,9 @@ namespace SchoolPlanner.Controllers {
             string _class = (string)TempData["class"];
             string subject = (string)TempData["subject"];
             string teacher = (string)TempData["teacher"];
-            reader.Lessons[id].Class = _class;
-            reader.Lessons[id].Subject = subject;
-            reader.Lessons[id].Teacher = teacher;
+            // reader.Lessons[id].Class = _class;
+            // reader.Lessons[id].Subject = subject;
+            // reader.Lessons[id].Teacher = teacher;
             reader.updateJsonFile();
             return View();
         }
