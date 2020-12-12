@@ -119,15 +119,11 @@ namespace SchoolPlanner.Controllers {
             var classesOptions = new List<Class>();
             var classes = _context.Class.ToList();
             var lessons = _context.Lesson.ToList();
-            var chosenClasses = from l in _context.Lesson
-                        where l.Id == id
-                        select l.Class;
-            var chosenClass = chosenClasses.Single();
-            classesOptions.Add(chosenClass);
             var chosenLessons = from l in _context.Lesson
                         where l.Id == id
                         select l;
             var chosenLesson = chosenLessons.Single();
+            classesOptions.Add(chosenLesson.Class);
             foreach (Class _class in classes) {
                 bool classAvailable = true;
                 foreach (Lesson lesson in lessons) {
@@ -142,11 +138,7 @@ namespace SchoolPlanner.Controllers {
             }
             var teachersOptions = new List<Teacher>();
             var teachers = _context.Teacher.ToList();
-            var chosenTeachers = from l in _context.Lesson
-                        where l.Id == id
-                        select l.Teacher;
-            var chosenTeacher = chosenTeachers.Single();
-            teachersOptions.Add(chosenTeacher);
+            teachersOptions.Add(chosenLesson.Teacher);
             foreach (Teacher teacher in teachers) {
                 bool teacherAvailable = true;
                 foreach (Lesson lesson in lessons) {
@@ -165,6 +157,9 @@ namespace SchoolPlanner.Controllers {
             ViewData["teachers_options"] = teachersOptions;
             ViewData["slot"] = slot;
             ViewData["subjects"] = _context.Subject.ToList();
+            ViewData["selected_class"] = chosenLesson.Class.Name;
+            ViewData["selected_subject"] = chosenLesson.Subject.Name;
+            ViewData["selected_teacher"] = chosenLesson.Teacher.Surname; 
 
             return View(reader);
         }

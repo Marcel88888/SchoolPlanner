@@ -11,7 +11,10 @@
 @{ int lessonToEditId = (int)ViewData["lesson_to_edit_id"]; 
     var classesOptions = ViewData["classes_options"] as List<Class>;
     var subjects = ViewData["subjects"] as List<Subject>;
-    var teachersOptions = ViewData["teachers_options"] as List<Teacher>; }
+    var teachersOptions = ViewData["teachers_options"] as List<Teacher>; 
+    var selectedClass = (string)ViewData["selected_class"];
+    var selectedSubject = (string)ViewData["selected_subject"];
+    var selectedTeacher = (string)ViewData["selected_teacher"]; }
 
 @using (Html.BeginForm("ValidateEditedData", "Classroom", new { id = lessonToEditId} )) {
     @Html.AntiForgeryToken()
@@ -20,11 +23,11 @@
     <button type="button" class="btn btn-secondary" onclick="location.href='@Url.Action("Index", "Classroom" )'">Cancel</button><br><br>
 
     <strong>@Html.LabelFor(model=>model.EditedLesson.Class, "Class")</strong><br>
-    @Html.DropDownListFor(model=>model.EditedLesson.Class, new SelectList(classesOptions, "", "Name"), "Select the class", new {htmlAttributes = new {@class="form-control"}})<br><br>
+    @Html.DropDownListFor(model=>model.EditedLesson.Class, new SelectList(classesOptions, "Name", "Name", selectedClass), "Select the class", new {htmlAttributes = new {@class="form-control"}})<br><br>
     <strong>@Html.LabelFor(model=>model.EditedLesson.Subject, "Subject")</strong><br>
-    @Html.DropDownListFor(model=>model.EditedLesson.Subject, new SelectList(subjects, "", "Name"), "Select the subject", new {htmlAttributes = new {@class="form-control"}})<br><br>
+    @Html.DropDownListFor(model=>model.EditedLesson.Subject, new SelectList(subjects, "Name", "Name", selectedSubject), "Select the subject", new {htmlAttributes = new {@class="form-control"}})<br><br>
     <strong>@Html.LabelFor(model=>model.EditedLesson.Teacher, "Teacher")</strong><br>
-    @Html.DropDownListFor(model=>model.EditedLesson.Teacher, new SelectList(teachersOptions, "", "Surname"), "Select the teacher", new {htmlAttributes = new {@class="form-control"}})<br><br>
+    @Html.DropDownListFor(model=>model.EditedLesson.Teacher, new SelectList(teachersOptions, "Surname", "Surname", selectedTeacher), "Select the teacher", new {htmlAttributes = new {@class="form-control"}})<br><br>
 
     <button type="submit" class="btn btn-primary">Edit</button>
     <button type="button" class="btn btn-danger" onclick="location.href='@Url.Action("DeleteLesson", "Classroom", new { id = lessonToEditId })'">Delete</button>
