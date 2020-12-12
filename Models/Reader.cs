@@ -14,7 +14,7 @@ namespace SchoolPlanner.Models {
         public string ChosenClass { get; set; }
         public string ChosenClassroom { get; set; }
         public string ChosenTeacher { get; set; }
-        public Lesson EditedLesson { get; set; }
+        public LessonData EditedLesson { get; set; }
         public LessonData NewLesson { get; set; }
         public List<Classroom> ClassroomsOptions { get; set; }
         public List<Class> ClassesOptions { get; set; }

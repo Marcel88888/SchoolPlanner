@@ -84,15 +84,15 @@
                             @{ bool lesson_found = false; }
                             @{ if (chosen_lessons != null && chosen_lessons.Any()) {
                                 foreach (Lesson lesson in chosen_lessons) { // TODO: for loop outside this loops (i, j) and adding contents to buttons by their id 
-                                    int? z = null;
+                                    int? lessonId = null;
                                     if (lesson.Slot == slot_number) {
                                         for (int k=0; k<all_lessons.Count; ++k) {
                                             if (Object.Equals(lesson, all_lessons[k])) {
-                                                z = k;
+                                                lessonId = lesson.Id;
                                                 break;
                                             }
                                         }
-                                        <button type="button" class="btn btn-primary btn-block" onclick="location.href='@Url.Action("EditLesson", "Classroom", new { id = z })'">@lesson.Class.Name</button> 
+                                        <button type="button" class="btn btn-primary btn-block" onclick="location.href='@Url.Action("EditLesson", "Classroom", new { id = lessonId, slot = slot_number })'">@lesson.Class.Name</button> 
                                         lesson_found = true;
                                         break;
                                     }   
