@@ -1,0 +1,10 @@
+@{
+    ViewData["Title"] = "Error";
+}
+
+<div class="text-center">
+    <div class="alert alert-danger">
+        <strong>Error!</strong> The value you have tried to delete has some lessons associated. 
+    </div>
+    <button type="button" class="btn btn-secondary" onclick="location.href='@Url.Action("Index", "Edit")'">Return</button><br><br> 
+</div>
