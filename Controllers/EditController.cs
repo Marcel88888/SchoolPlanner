@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SchoolPlanner.Models;
 using System.Linq;
+using System;
 
 
 namespace SchoolPlanner.Controllers {
@@ -34,7 +35,8 @@ namespace SchoolPlanner.Controllers {
         public IActionResult Index(Edit edit, Reader reader) {
             if (edit.ClassroomToAdd != null) {
                 _context.Classroom.Add(new Classroom {
-                        Number = edit.ClassroomToAdd
+                        Number = edit.ClassroomToAdd,
+                        Timestamp = DateTime.Now
                         });
                 _context.SaveChanges();
             }
@@ -48,7 +50,8 @@ namespace SchoolPlanner.Controllers {
             }
             else if (edit.ClassToAdd != null) {
                 _context.Class.Add(new Class {
-                        Name = edit.ClassToAdd
+                        Name = edit.ClassToAdd,
+                        Timestamp = DateTime.Now
                         });
                 _context.SaveChanges();
             }
@@ -62,7 +65,8 @@ namespace SchoolPlanner.Controllers {
             }
             else if (edit.SubjectToAdd != null) {
                 _context.Subject.Add(new Subject {
-                        Name = edit.SubjectToAdd
+                        Name = edit.SubjectToAdd,
+                        Timestamp = DateTime.Now
                         });
                 _context.SaveChanges();
             }
@@ -76,7 +80,8 @@ namespace SchoolPlanner.Controllers {
             }
             else if (edit.TeacherToAdd != null) {
                 _context.Teacher.Add(new Teacher {
-                        Surname = edit.TeacherToAdd
+                        Surname = edit.TeacherToAdd,
+                        Timestamp = DateTime.Now
                         });
                 _context.SaveChanges();
             }
