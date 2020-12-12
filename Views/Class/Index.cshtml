@@ -15,13 +15,19 @@
 
     <h1 class="display-4">CLASSES</h1>
 
+    @{ var classes = ViewData["classes"] as List<Class>;}
+
     @* @using (Html.BeginForm("Index", "Class", new { _class = Model.ChosenClass })) { // TODO *@
     @using (Html.BeginForm()) {
         @Html.AntiForgeryToken()
         @Html.ValidationSummary(true, "", new { @class = "text-danger"} )
-
-        @Html.DropDownListFor(model=>model.ChosenClass, new SelectList(Model.Classes, "Name", "Name"), "Select the class", new {htmlAttributes = new {@class="form-control"}})
-        <button type="submit" class="btn btn-primary">Select</button>
+        if (classes != null && classes.Any()) {
+            @Html.DropDownListFor(model=>model.ChosenClass, new SelectList(classes, "Name", "Name"), "Select the class", new {htmlAttributes = new {@class="form-control"}})
+            <button type="submit" class="btn btn-primary">Select</button>
+        }
+        else {
+            <p>No classes defined</p>
+        }
     }
 
     @{var all_lessons = ViewData["all_lessons"] as List<Lesson>;}

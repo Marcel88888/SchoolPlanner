@@ -10,18 +10,24 @@ using SchoolPlanner.Models;
 namespace SchoolPlanner.Controllers {
     public class TeacherController : Controller {
         private readonly ILogger<TeacherController> _logger;
+        private readonly SchoolPlannerContext _context;
 
-        public TeacherController(ILogger<TeacherController> logger) {
+        public TeacherController(ILogger<TeacherController> logger, SchoolPlannerContext context) {
             _logger = logger;
+            _context = context;
         }
 
         public IActionResult Index() {
             Reader reader = new Reader();
+            var teachers = _context.Teacher.OrderBy(t => t.Surname).ToList();
+            ViewData["teachers"] = teachers; 
             return View(reader);
         }
 
         [HttpPost]
-        public IActionResult Index(Reader reader) {     
+        public IActionResult Index(Reader reader) { 
+            var teachers = _context.Teacher.OrderBy(t => t.Surname).ToList();
+            ViewData["teachers"] = teachers;     
             ViewData["all_lessons"] = reader.Lessons;
             ViewData["chosen_lessons"] = reader.getLessonsByTeacher(reader.ChosenTeacher);
             return View(reader);

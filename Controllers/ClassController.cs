@@ -4,12 +4,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using SchoolPlanner.Models;
+using System.Linq;
 
 
 namespace SchoolPlanner.Controllers {
     public class ClassController : Controller {
         private readonly ILogger<ClassController> _logger;
-        private SchoolPlannerContext _context;
+        private readonly SchoolPlannerContext _context;
 
         public ClassController(ILogger<ClassController> logger, SchoolPlannerContext context) {
             _logger = logger;
@@ -18,11 +19,15 @@ namespace SchoolPlanner.Controllers {
 
         public IActionResult Index() {
             Reader reader = new Reader();
+            var classes = _context.Class.OrderBy(c => c.Name).ToList();
+            ViewData["classes"] = classes; 
             return View(reader);
         }
 
         [HttpPost]
         public IActionResult Index(Reader reader) {     // TODO: add "string _class" as a parameter 
+            var classes = _context.Class.OrderBy(c => c.Name).ToList();
+            ViewData["classes"] = classes; 
             ViewData["all_lessons"] = reader.Lessons;
             ViewData["chosen_lessons"] = reader.getLessonsByClass(reader.ChosenClass);
             return View(reader);

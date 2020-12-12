@@ -2,7 +2,8 @@ using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SchoolPlanner.Models;
-using System;
+using System.Linq;
+
 
 namespace SchoolPlanner.Controllers {
     public class EditController : Controller {
@@ -12,17 +13,20 @@ namespace SchoolPlanner.Controllers {
         public EditController(ILogger<HomeController> logger, SchoolPlannerContext context) {
             _logger = logger;
             _context = context;
-            var classes = _context.Class;
-            Console.WriteLine("AAAAAAAAAAA");
-            foreach (var c in classes) {
-                Console.WriteLine(c.Name);
-            }
         }
 
         public IActionResult Index() {
             Edit edit = new Edit();
             Reader reader = new Reader();
             edit._Reader = reader;
+            var classes = _context.Class.OrderBy(c => c.Name).ToList();
+            var classrooms = _context.Classroom.OrderBy(c => c.Number).ToList();
+            var teachers = _context.Teacher.OrderBy(t => t.Surname).ToList();
+            var subjects = _context.Subject.OrderBy(s => s.Name).ToList();
+            ViewData["classes"] = classes; 
+            ViewData["classrooms"] = classrooms; 
+            ViewData["teachers"] = teachers; 
+            ViewData["subjects"] = subjects; 
             return View(edit);
         }
 
@@ -34,35 +38,64 @@ namespace SchoolPlanner.Controllers {
                         });
                 _context.SaveChanges();
             }
-            if (edit.ClassroomToDelete != null) {
-                reader.Classrooms.RemoveAll(x => x.Number == edit.ClassroomToDelete);
-                reader.updateJsonFile();
+            else if (edit.ClassroomToDelete != null) {
+                var _classrooms = from c in _context.Classroom
+                                where c.Number == edit.ClassroomToDelete
+                                select c;
+                var classroom = _classrooms.Single();
+                _context.Classroom.Remove(classroom);
+                _context.SaveChanges();
             }
-            if (edit.ClassToAdd != null) {
-                reader.Classes.Add(new Class(edit.ClassToAdd));
-                reader.updateJsonFile();
+            else if (edit.ClassToAdd != null) {
+                _context.Class.Add(new Class {
+                        Name = edit.ClassToAdd
+                        });
+                _context.SaveChanges();
             }
-            if (edit.ClassToDelete != null) {
-                reader.Classes.RemoveAll(x => x.Name == edit.ClassToDelete);
-                reader.updateJsonFile();
+            else if (edit.ClassToDelete != null) {
+                var _classes = from c in _context.Class
+                                where c.Name == edit.ClassToDelete
+                                select c;
+                var _class = _classes.Single();
+                _context.Class.Remove(_class);
+                _context.SaveChanges();
             }
-            if (edit.SubjectToAdd != null) {
-                reader.Subjects.Add(edit.SubjectToAdd);
-                reader.updateJsonFile();
+            else if (edit.SubjectToAdd != null) {
+                _context.Subject.Add(new Subject {
+                        Name = edit.SubjectToAdd
+                        });
+                _context.SaveChanges();
             }
-            if (edit.SubjectToDelete != null) {
-                reader.Subjects.RemoveAll(x => x == edit.SubjectToDelete);
-                reader.updateJsonFile();
+            else if (edit.SubjectToDelete != null) {
+                var _subjects = from s in _context.Subject
+                                where s.Name == edit.SubjectToDelete
+                                select s;
+                var subject = _subjects.Single();
+                _context.Subject.Remove(subject);
+                _context.SaveChanges();
             }
-            if (edit.TeacherToAdd != null) {
-                reader.Teachers.Add(new Teacher(edit.TeacherToAdd));
-                reader.updateJsonFile();
+            else if (edit.TeacherToAdd != null) {
+                _context.Teacher.Add(new Teacher {
+                        Surname = edit.TeacherToAdd
+                        });
+                _context.SaveChanges();
             }
-            if (edit.TeacherToDelete != null) {
-                reader.Teachers.RemoveAll(x => x.Surname == edit.TeacherToDelete);
-                reader.updateJsonFile();
+            else if (edit.TeacherToDelete != null) {
+                var _teachers = from t in _context.Teacher
+                                where t.Surname == edit.TeacherToDelete
+                                select t;
+                var teacher = _teachers.Single();
+                _context.Teacher.Remove(teacher);
+                _context.SaveChanges();
             }
-            edit._Reader = reader;
+            var classes = _context.Class.OrderBy(c => c.Name).ToList();
+            var classrooms = _context.Classroom.OrderBy(c => c.Number).ToList();
+            var teachers = _context.Teacher.OrderBy(t => t.Surname).ToList();
+            var subjects = _context.Subject.OrderBy(s => s.Name).ToList();
+            ViewData["classes"] = classes; 
+            ViewData["classrooms"] = classrooms; 
+            ViewData["teachers"] = teachers; 
+            ViewData["subjects"] = subjects;
             return View(edit);
         }
 

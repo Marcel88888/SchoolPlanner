@@ -21,22 +21,22 @@ public class SchoolPlannerContext : DbContext {
 
             modelBuilder.Entity<Class>(entity => {
                 entity.HasKey(e => e.Id);
-                //entity.HasIndex(e => e.Name).IsUnique();
+                entity.HasIndex(e => e.Name).IsUnique();
             });
 
             modelBuilder.Entity<Classroom>(entity => {
                 entity.HasKey(e => e.Id);
-                //entity.HasIndex(e => e.Number).IsUnique();
+                entity.HasIndex(e => e.Number).IsUnique();
             });
 
             modelBuilder.Entity<Teacher>(entity => {
                 entity.HasKey(e => e.Id);
-                //entity.HasIndex(e => e.Surname).IsUnique();
+                entity.HasIndex(e => e.Surname).IsUnique();
             });
 
             modelBuilder.Entity<Subject>(entity => {
                 entity.HasKey(e => e.Id);
-                //entity.HasIndex(e => e.Name).IsUnique();
+                entity.HasIndex(e => e.Name).IsUnique();
             });
         }
 
