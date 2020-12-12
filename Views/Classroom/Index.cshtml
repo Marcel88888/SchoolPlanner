@@ -1,5 +1,6 @@
 @using System.Collections.Generic
 @using SchoolPlanner.Models
+@using System;
 @model Reader
 
 @{
@@ -81,23 +82,25 @@
                         <td>
                             @{slot_number++;}
                             @{ bool lesson_found = false; }
-                            @foreach (Lesson lesson in chosen_lessons) { // TODO: for loop outside this loops (i, j) and adding contents to buttons by their id 
-                                int? z = null;
-                                if (lesson.Slot == slot_number) {
-                                    for (int k=0; k<all_lessons.Count; ++k) {
-                                        if (Object.Equals(lesson, all_lessons[k])) {
-                                            z = k;
-                                            break;
+                            @{ if (chosen_lessons != null && chosen_lessons.Any()) {
+                                foreach (Lesson lesson in chosen_lessons) { // TODO: for loop outside this loops (i, j) and adding contents to buttons by their id 
+                                    int? z = null;
+                                    if (lesson.Slot == slot_number) {
+                                        for (int k=0; k<all_lessons.Count; ++k) {
+                                            if (Object.Equals(lesson, all_lessons[k])) {
+                                                z = k;
+                                                break;
+                                            }
                                         }
-                                    }
-                                    <button type="button" class="btn btn-primary btn-block" onclick="location.href='@Url.Action("EditLesson", "Classroom", new { id = z })'">@lesson.Class</button> 
-                                    lesson_found = true;
-                                    break;
-                                }   
-                            }
-                                @if (lesson_found == false) {
-                                    <button type="button" class="btn btn-primary btn-block" onclick="location.href='@Url.Action("AddLesson", "Classroom", new { slot = slot_number, chosenClassroom = Model.ChosenClassroom })'"></button>  
+                                        <button type="button" class="btn btn-primary btn-block" onclick="location.href='@Url.Action("EditLesson", "Classroom", new { id = z })'">@lesson.Class.Name</button> 
+                                        lesson_found = true;
+                                        break;
+                                    }   
                                 }
+                            }}    
+                            @if (lesson_found == false) {
+                                <button type="button" class="btn btn-primary btn-block" onclick="location.href='@Url.Action("AddLesson", "Classroom", new { slot = slot_number, chosenClassroom = Model.ChosenClassroom })'"></button>  
+                            }
                         </td>
                     }
                 </tr>   

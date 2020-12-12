@@ -95,9 +95,9 @@
                                     break;
                                 }   
                             }
-                                @if (lesson_found == false) {
-                                    <button type="button" class="btn btn-primary btn-block" onclick="location.href='@Url.Action("AddLesson", "Class", new { slot = slot_number, chosenClass = Model.ChosenClass })'"></button>  
-                                }
+                            @if (lesson_found == false) {
+                                <button type="button" class="btn btn-primary btn-block" onclick="location.href='@Url.Action("AddLesson", "Class", new { slot = slot_number, chosenClass = Model.ChosenClass })'"></button>  
+                            }
                         </td>
                     }
                 </tr>   

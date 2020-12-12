@@ -66,7 +66,7 @@ namespace SchoolPlanner.Controllers {
         }
 
         public IActionResult SuccessfulLessonAdding(Reader reader, string chosenClass, int slot) {
-            reader.NewLesson = new Lesson();
+            //reader.NewLesson = new LessonData();
             string classroom = (string)TempData["classroom"];
             string subject = (string)TempData["subject"];
             string teacher = (string)TempData["teacher"];
@@ -75,7 +75,7 @@ namespace SchoolPlanner.Controllers {
             // reader.NewLesson.Subject = subject;
             // reader.NewLesson.Slot = slot;
             // reader.NewLesson.Teacher = teacher;
-            reader.Lessons.Add(reader.NewLesson);
+            //reader.Lessons.Add(reader.NewLesson);
             reader.updateJsonFile();
             return View();       // TODO: Index with class
         }

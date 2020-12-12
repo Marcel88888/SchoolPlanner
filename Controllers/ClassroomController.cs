@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SchoolPlanner.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace SchoolPlanner.Controllers {
     public class ClassroomController : Controller {
@@ -26,57 +27,104 @@ namespace SchoolPlanner.Controllers {
 
         [HttpPost]
         public IActionResult Index(Reader reader) { 
-            var classrooms = _context.Classroom.OrderBy(c => c.Number).ToList();
-            ViewData["classrooms"] = classrooms; 
-            ViewData["all_lessons"] = reader.Lessons;
-            ViewData["chosen_lessons"] = reader.getLessonsByClassroom(reader.ChosenClassroom);
+            ViewData["classrooms"] = _context.Classroom.OrderBy(c => c.Number).ToList();
+            ViewData["all_lessons"] = _context.Lesson.ToList();
+            var chosen_lessons = _context.Lesson
+                       .Where(l => l.Classroom.Number == reader.ChosenClassroom)
+                       .Include(l => l.Class)
+                       .Include(l => l.Subject)
+                       .Include(l => l.Classroom)
+                       .Include(l => l.Teacher)
+                       .ToList();
+            ViewData["chosen_lessons"] = chosen_lessons.ToList();
             return View(reader);
         }
 
         public IActionResult AddLesson(Reader reader, string chosenClassroom, int slot) {
-            // reader.ClassesOptions = new List<Class>();
-            // foreach (Class _class in reader.Classes) {
-            //     bool classAvailable = true;
-            //     foreach (Lesson lesson in reader.Lessons) {
-            //         if (_class.Name == lesson.Class && slot == lesson.Slot) {
-            //             classAvailable = false;
-            //             break;
-            //         }
-            //     }
-            //     if (classAvailable) {
-            //         reader.ClassesOptions.Add(_class);
-            //     }
-            // }
-            // reader.TeachersOptions = new List<Teacher>();
-            // foreach (Teacher teacher in reader.Teachers) {
-            //     bool teacherAvailable = true;
-            //     foreach (Lesson lesson in reader.Lessons) {
-            //         if (teacher.Surname == lesson.Teacher && slot == lesson.Slot) {
-            //             teacherAvailable = false;
-            //             break;
-            //         }
-            //     }
-            //     if (teacherAvailable) {
-            //         reader.TeachersOptions.Add(teacher);
-            //     }
-            // }
-            // ViewData["chosen_classroom"] = chosenClassroom;
-            // ViewData["slot"] = slot;
+            var classesOptions = new List<Class>();
+            var classes = _context.Class.ToList();
+            var lessons = _context.Lesson.ToList();
+            foreach (Class _class in classes) {
+                bool classAvailable = true;
+                foreach (Lesson lesson in lessons) {
+                    if (_class.Name == lesson.Class.Name && slot == lesson.Slot) {
+                        classAvailable = false;
+                        break;
+                    }
+                }
+                if (classAvailable) {
+                    classesOptions.Add(_class);
+                }
+            }
+            var teachersOptions = new List<Teacher>();
+            var teachers = _context.Teacher.ToList();
+            foreach (Teacher teacher in teachers) {
+                bool teacherAvailable = true;
+                foreach (Lesson lesson in lessons) {
+                    if (teacher.Surname == lesson.Teacher.Surname && slot == lesson.Slot) {
+                        teacherAvailable = false;
+                        break;
+                    }
+                }
+                if (teacherAvailable) {
+                    teachersOptions.Add(teacher);
+                }
+            }
+
+            ViewData["classes_options"] = classesOptions;
+            ViewData["teachers_options"] = teachersOptions;
+            ViewData["chosen_classroom"] = chosenClassroom;
+            ViewData["slot"] = slot;
+            ViewData["subjects"] = _context.Subject.ToList();
+
             return View(reader);
         }
 
         public IActionResult SuccessfulLessonAdding(Reader reader, string chosenClassroom, int slot) {
-            reader.NewLesson = new Lesson();
-            string _class = (string)TempData["class"];
-            string subject = (string)TempData["subject"];
-            string teacher = (string)TempData["teacher"];
+            // reader.NewLesson = new Lesson();
+            // Class _class = (Class)TempData["class"];
+            // Subject subject = (Subject)TempData["subject"];
+            // Teacher teacher = (Teacher)TempData["teacher"];
             // reader.NewLesson.Classroom = chosenClassroom;
             // reader.NewLesson.Class = _class;
             // reader.NewLesson.Subject = subject;
             // reader.NewLesson.Slot = slot;
             // reader.NewLesson.Teacher = teacher;
-            reader.Lessons.Add(reader.NewLesson);
-            reader.updateJsonFile();
+            // reader.Lessons.Add(reader.NewLesson);
+            // reader.updateJsonFile();
+
+            // TempData["class"] = reader.NewLesson.Class;
+            //     TempData["subject"] = reader.NewLesson.Subject;
+            //     TempData["teacher"] = reader.NewLesson.Teacher;
+            //     TempData["classroom"] = chosenClassroom;
+            //     TempData["slot"] = slot;
+
+
+            var classes = from c in _context.Class
+                            where c.Name == (string)TempData["class"]
+                            select c;
+            var _class = classes.Single();
+            var subjects = from s in _context.Subject
+                            where s.Name == (string)TempData["subject"]
+                            select s;
+            var subject = subjects.Single();
+            var teachers = from t in _context.Teacher
+                            where t.Surname == (string)TempData["teacher"]
+                            select t;
+            var teacher = teachers.Single();
+            var classrooms = from c in _context.Classroom
+                            where c.Number == (string)TempData["classroom"]
+                            select c;
+            var classroom = classrooms.Single();
+
+            _context.Add(new Lesson {
+                Classroom = classroom,
+                Class = _class,
+                Subject = subject,
+                Slot = (int)TempData["slot"],
+                Teacher = teacher
+            });
+            _context.SaveChanges();
             return View();     
         }
 
@@ -142,14 +190,16 @@ namespace SchoolPlanner.Controllers {
             return RedirectToAction("Index");
         }
 
-        public IActionResult ValidateAddedData(Reader reader, Lesson newLesson, string chosenClassroom, int slot) {
-            if (newLesson.Class == null || newLesson.Subject == null || newLesson.Teacher == null) {
+        public IActionResult ValidateAddedData(Reader reader, string chosenClassroom, int slot) {
+            if (reader.NewLesson.Class == null || reader.NewLesson.Subject == null || reader.NewLesson.Teacher == null) {
                 return RedirectToAction("UnsuccessfulLessonAdding", new { chosenClassroom = chosenClassroom, slot = slot });
             }
             else {
-                TempData["class"] = newLesson.Class;
-                TempData["subject"] = newLesson.Subject;
-                TempData["teacher"] = newLesson.Teacher;
+                TempData["class"] = reader.NewLesson.Class;
+                TempData["subject"] = reader.NewLesson.Subject;
+                TempData["teacher"] = reader.NewLesson.Teacher;
+                TempData["classroom"] = chosenClassroom;
+                TempData["slot"] = slot;
                 return RedirectToAction("SuccessfulLessonAdding", new { chosenClassroom = chosenClassroom, slot = slot });
             }
         }
