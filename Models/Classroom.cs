@@ -7,7 +7,7 @@ namespace SchoolPlanner.Models {
         public int Id { get; set; }
 
         [Required]
-        [MaxLength(30)]
+        [MaxLength(10)]
         public string Number { get; set; }
 
         public DateTime Timestamp { get; set; }

@@ -197,8 +197,12 @@ namespace SchoolPlanner.Controllers {
         }
 
         public IActionResult DeleteLesson(Reader reader, int id) {
-            // reader.Lessons.RemoveAt(id);
-            // reader.updateJsonFile();
+            var lessons = from l in _context.Lesson
+                            where l.Id == id
+                            select l;
+            var lesson = lessons.Single();
+            _context.Lesson.Remove(lesson);
+            _context.SaveChanges();
             return RedirectToAction("Index");
         }
 
