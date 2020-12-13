@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 
+
 namespace SchoolPlanner.Models {
     public class Subject {
 
@@ -11,11 +12,5 @@ namespace SchoolPlanner.Models {
         public string Name { get; set; }
 
         public DateTime Timestamp { get; set; }
-
-        public Subject() {}
-
-        public Subject(string name) {
-            Name = name;
-        }
     }
 }

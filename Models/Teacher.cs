@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 
+
 namespace SchoolPlanner.Models {
     public class Teacher {
 
@@ -11,9 +12,5 @@ namespace SchoolPlanner.Models {
         public string Surname { get; set; }
         
         public DateTime Timestamp { get; set; }
-
-        public override string ToString() {
-            return Surname;
-        }  
     }
 }

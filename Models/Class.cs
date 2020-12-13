@@ -11,11 +11,5 @@ namespace SchoolPlanner.Models {
         [MaxLength(10)]
         public string Name { get; set; }
         public DateTime Timestamp { get; set; }
-
-        public Class() {}
-
-        public Class(string name) {
-            Name = name;
-        }
     }
 }

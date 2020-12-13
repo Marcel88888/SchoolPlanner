@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SchoolPlanner.Models;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 
 namespace SchoolPlanner.Controllers {
@@ -102,7 +103,8 @@ namespace SchoolPlanner.Controllers {
                 Class = _class,
                 Subject = subject,
                 Slot = slot,
-                Teacher = teacher
+                Teacher = teacher,
+                Timestamp = DateTime.Now
             });
             _context.SaveChanges();
             return View();     
@@ -185,6 +187,7 @@ namespace SchoolPlanner.Controllers {
             lesson.Class = _class;
             lesson.Subject = subject;
             lesson.Teacher = teacher;
+            lesson.Timestamp = DateTime.Now;
             _context.SaveChanges();
 
             return View();

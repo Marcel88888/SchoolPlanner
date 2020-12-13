@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 
+
 namespace SchoolPlanner.Models {
     public class Classroom {
 
@@ -11,11 +12,5 @@ namespace SchoolPlanner.Models {
         public string Number { get; set; }
 
         public DateTime Timestamp { get; set; }
-
-        public Classroom() {}
-
-        public Classroom(string number) {
-            Number = number;
-        }
     }
 }

@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+using System;
+
 
 namespace SchoolPlanner.Models {
     public class Lesson {
@@ -21,5 +22,6 @@ namespace SchoolPlanner.Models {
 
         [Required]
         public virtual Teacher Teacher { get; set; }
+        public DateTime Timestamp { get; set; }
     }
 }
