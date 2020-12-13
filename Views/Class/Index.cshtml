@@ -84,8 +84,8 @@
                             @foreach (Lesson lesson in chosen_lessons) { // TODO: for loop outside this loops (i, j) and adding contents to buttons by their id 
                                 int? lessonId = null;
                                 if (lesson.Slot == slot_number) {
-                                    for (int k=0; k<all_lessons.Count; ++k) {
-                                        if (Object.Equals(lesson, all_lessons[k])) {
+                                    foreach (var l in all_lessons) {
+                                        if (Object.Equals(lesson, l)) {
                                             lessonId = lesson.Id;
                                             break;
                                         }

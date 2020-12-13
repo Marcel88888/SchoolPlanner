@@ -8,18 +8,22 @@
     <h1 class="display-4">Add a lesson</h1>
 </div>
 
-@using (Html.BeginForm("ValidateAddedData", "Teacher", new { newLesson = Model.NewLesson, chosenTeacher = ViewData["chosen_teacher"], slot = ViewData["slot"] })) {
+@{ var classesOptions = ViewData["classes_options"] as List<Class>;
+    var subjects = ViewData["subjects"] as List<Subject>;
+    var classroomsOptions = ViewData["classrooms_options"] as List<Classroom>; }
+
+@using (Html.BeginForm("ValidateAddedData", "Teacher", new { chosenTeacher = ViewData["chosen_teacher"], slot = ViewData["slot"] })) {
     @Html.AntiForgeryToken()
     @Html.ValidationSummary(true, "", new { @class = "text-danger"} )
 
     <button type="button" class="btn btn-secondary" onclick="location.href='@Url.Action("Index", "Teacher" )'">Cancel</button><br><br>
 
-    <strong>@Html.LabelFor(model=>model.NewLesson.Classroom, "Classroom")</strong><br>
-    @Html.DropDownListFor(model=>model.NewLesson.Classroom, new SelectList(Model.ClassroomsOptions, "Number", "Number"), "Select the classroom", new {htmlAttributes = new {@class="form-control"}})<br><br>
     <strong>@Html.LabelFor(model=>model.NewLesson.Class, "Class")</strong><br>
-    @Html.DropDownListFor(model=>model.NewLesson.Class, new SelectList(Model.ClassesOptions, "Name", "Name"), "Select the class", new {htmlAttributes = new {@class="form-control"}})<br><br>
+    @Html.DropDownListFor(model=>model.NewLesson.Class, new SelectList(classesOptions, "", "Name"), "Select the class", new {htmlAttributes = new {@class="form-control"}})<br><br>
     <strong>@Html.LabelFor(model=>model.NewLesson.Subject, "Subject")</strong><br>
-    @Html.DropDownListFor(model=>model.NewLesson.Subject, new SelectList(Model.Subjects), "Select the subject", new {htmlAttributes = new {@class="form-control"}})<br><br>
+    @Html.DropDownListFor(model=>model.NewLesson.Subject, new SelectList(subjects, "", "Name"), "Select the subject", new {htmlAttributes = new {@class="form-control"}})<br><br>
+    <strong>@Html.LabelFor(model=>model.NewLesson.Classroom, "Classroom")</strong><br>
+    @Html.DropDownListFor(model=>model.NewLesson.Classroom, new SelectList(classroomsOptions, "", "Number"), "Select the classroom", new {htmlAttributes = new {@class="form-control"}})<br><br>
 
     <button type="submit" class="btn btn-primary">Add</button>
 }

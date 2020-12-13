@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using SchoolPlanner.Models;
 using Microsoft.EntityFrameworkCore;
 
+
 namespace SchoolPlanner.Controllers {
     public class ClassroomController : Controller {
         private readonly ILogger<ClassroomController> _logger;
