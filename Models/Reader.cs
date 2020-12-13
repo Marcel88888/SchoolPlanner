@@ -11,9 +11,9 @@ namespace SchoolPlanner.Models {
         public List<string> Subjects { get; set; }
         public List<Teacher> Teachers { get; set; }
         public List<Lesson> Lessons { get; set; }
-        public string ChosenClass { get; set; }
-        public string ChosenClassroom { get; set; }
-        public string ChosenTeacher { get; set; }
+        public int? ChosenClass { get; set; }
+        public int? ChosenClassroom { get; set; }
+        public int? ChosenTeacher { get; set; }
         public LessonData EditedLesson { get; set; }
         public LessonData NewLesson { get; set; }
         public List<Classroom> ClassroomsOptions { get; set; }

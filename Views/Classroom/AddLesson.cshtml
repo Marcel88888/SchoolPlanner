@@ -19,11 +19,11 @@
     <button type="button" class="btn btn-secondary" onclick="location.href='@Url.Action("Index", "Classroom" )'">Cancel</button><br><br>
 
     <strong>@Html.LabelFor(model=>model.NewLesson.Class, "Class")</strong><br>
-    @Html.DropDownListFor(model=>model.NewLesson.Class, new SelectList(classesOptions, "", "Name"), "Select the class", new {htmlAttributes = new {@class="form-control"}})<br><br>
+    @Html.DropDownListFor(model=>model.NewLesson.Class, new SelectList(classesOptions, "Id", "Name"), "Select the class", new {htmlAttributes = new {@class="form-control"}})<br><br>
     <strong>@Html.LabelFor(model=>model.NewLesson.Subject, "Subject")</strong><br>
-    @Html.DropDownListFor(model=>model.NewLesson.Subject, new SelectList(subjects, "", "Name"), "Select the subject", new {htmlAttributes = new {@class="form-control"}})<br><br>
+    @Html.DropDownListFor(model=>model.NewLesson.Subject, new SelectList(subjects, "Id", "Name"), "Select the subject", new {htmlAttributes = new {@class="form-control"}})<br><br>
     <strong>@Html.LabelFor(model=>model.NewLesson.Teacher, "Teacher")</strong><br>
-    @Html.DropDownListFor(model=>model.NewLesson.Teacher, new SelectList(teachersOptions, "", "Surname"), "Select the teacher", new {htmlAttributes = new {@class="form-control"}})<br><br>
+    @Html.DropDownListFor(model=>model.NewLesson.Teacher, new SelectList(teachersOptions, "Id", "Surname"), "Select the teacher", new {htmlAttributes = new {@class="form-control"}})<br><br>
 
     <button type="submit" class="btn btn-primary">Add</button>
 }

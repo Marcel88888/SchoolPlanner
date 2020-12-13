@@ -1,9 +1,9 @@
 namespace SchoolPlanner.Models {
     public class LessonData {
-        public string Classroom { get; set; }
-        public string Class { get; set; }
-        public string Subject { get; set; }
-        public int Slot { get; set; }
-        public string Teacher { get; set; }
+        public int? Classroom { get; set; }
+        public int? Class { get; set; }
+        public int? Subject { get; set; }
+        public int? Slot { get; set; }
+        public int? Teacher { get; set; }
     }
 }

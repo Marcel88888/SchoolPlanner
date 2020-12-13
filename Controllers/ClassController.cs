@@ -26,11 +26,11 @@ namespace SchoolPlanner.Controllers {
         }
 
         [HttpPost]
-        public IActionResult Index(Reader reader) {     // TODO: add "string _class" as a parameter 
+        public IActionResult Index(Reader reader) {     
             ViewData["classes"] = _context.Class.OrderBy(c => c.Name).ToList();
             ViewData["all_lessons"] = _context.Lesson.ToList();
             var chosen_lessons = _context.Lesson
-                       .Where(l => l.Class.Name == reader.ChosenClass)
+                       .Where(l => l.Class.Id == reader.ChosenClass)
                        .Include(l => l.Class)
                        .Include(l => l.Subject)
                        .Include(l => l.Classroom)
@@ -40,7 +40,7 @@ namespace SchoolPlanner.Controllers {
             return View(reader);
         }
 
-        public IActionResult AddLesson(Reader reader, string chosenClass, int slot) {
+        public IActionResult AddLesson(Reader reader, int chosenClass, int slot) {
             var classroomsOptions = new List<Classroom>();
             var classrooms = _context.Classroom.ToList();
             var lessons = _context.Lesson.ToList();
@@ -80,21 +80,21 @@ namespace SchoolPlanner.Controllers {
             return View(reader);
         }
 
-        public IActionResult SuccessfulLessonAdding(Reader reader, string chosenClass, int slot) {
+        public IActionResult SuccessfulLessonAdding(Reader reader, int chosenClass, int slot) {
             var classrooms = from c in _context.Classroom
-                            where c.Number == (string)TempData["classroom"]
+                            where c.Id == (int)TempData["classroom"]
                             select c;
             var classroom = classrooms.Single();
             var subjects = from s in _context.Subject
-                            where s.Name == (string)TempData["subject"]
+                            where s.Id == (int)TempData["subject"]
                             select s;
             var subject = subjects.Single();
             var teachers = from t in _context.Teacher
-                            where t.Surname == (string)TempData["teacher"]
+                            where t.Id == (int)TempData["teacher"]
                             select t;
             var teacher = teachers.Single();
             var classes = from c in _context.Class
-                            where c.Name == chosenClass
+                            where c.Id == chosenClass
                             select c;
             var _class = classes.Single();
 
@@ -110,7 +110,7 @@ namespace SchoolPlanner.Controllers {
             return View();     
         }
 
-        public IActionResult UnsuccessfulLessonAdding(Reader reader, string chosenClass, int slot) {
+        public IActionResult UnsuccessfulLessonAdding(Reader reader, int chosenClass, int slot) {
             ViewData["chosen_class"] = chosenClass;
             ViewData["slot"] = slot;
             return View();
@@ -158,24 +158,24 @@ namespace SchoolPlanner.Controllers {
             ViewData["teachers_options"] = teachersOptions;
             ViewData["slot"] = slot;
             ViewData["subjects"] = _context.Subject.ToList();
-            ViewData["selected_classroom"] = chosenLesson.Classroom.Number;
-            ViewData["selected_subject"] = chosenLesson.Subject.Name;
-            ViewData["selected_teacher"] = chosenLesson.Teacher.Surname; 
+            ViewData["selected_classroom"] = chosenLesson.Classroom.Id;
+            ViewData["selected_subject"] = chosenLesson.Subject.Id;
+            ViewData["selected_teacher"] = chosenLesson.Teacher.Id; 
 
             return View(reader);
         }
 
         public IActionResult SuccessfulLessonEdit(Reader reader, int id) {
             var classrooms = from c in _context.Classroom
-                            where c.Number == (string)TempData["classroom"]
+                            where c.Id == (int)TempData["classroom"]
                             select c;
             var classroom = classrooms.Single();
             var subjects = from s in _context.Subject
-                            where s.Name == (string)TempData["subject"]
+                            where s.Id == (int)TempData["subject"]
                             select s;
             var subject = subjects.Single();
             var teachers = from t in _context.Teacher
-                            where t.Surname == (string)TempData["teacher"]
+                            where t.Id == (int)TempData["teacher"]
                             select t;
             var teacher = teachers.Single();
             
@@ -208,7 +208,7 @@ namespace SchoolPlanner.Controllers {
             return RedirectToAction("Index");
         }
 
-        public IActionResult ValidateAddedData(Reader reader, string chosenClass, int slot) {
+        public IActionResult ValidateAddedData(Reader reader, int chosenClass, int slot) {
             if (reader.NewLesson.Classroom == null || reader.NewLesson.Subject == null || reader.NewLesson.Teacher == null) {
                 return RedirectToAction("UnsuccessfulLessonAdding", new { chosenClass = chosenClass, slot = slot });
             }

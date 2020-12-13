@@ -22,7 +22,7 @@
         @Html.AntiForgeryToken()
         @Html.ValidationSummary(true, "", new { @class = "text-danger"} )
         if (classes != null && classes.Any()) {
-            @Html.DropDownListFor(model=>model.ChosenClass, new SelectList(classes, "Name", "Name"), "Select the class", new {htmlAttributes = new {@class="form-control"}})
+            @Html.DropDownListFor(model=>model.ChosenClass, new SelectList(classes, "Id", "Name"), "Select the class", new {htmlAttributes = new {@class="form-control"}})
             <button type="submit" class="btn btn-primary">Select</button>
         }
         else {
@@ -33,7 +33,7 @@
     @{var all_lessons = ViewData["all_lessons"] as List<Lesson>;}
     @{var chosen_lessons = ViewData["chosen_lessons"] as List<Lesson>;}
 
-    @if (!String.IsNullOrEmpty(Model.ChosenClass)) {
+    @if (Model.ChosenClass != null) {
         <table>
             <thead>
                 <th></th>
