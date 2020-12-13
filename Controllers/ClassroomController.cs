@@ -92,7 +92,7 @@ namespace SchoolPlanner.Controllers {
                             select t;
             var teacher = teachers.Single();
             var classrooms = from c in _context.Classroom
-                            where c.Number == (string)TempData["classroom"]
+                            where c.Number == chosenClassroom
                             select c;
             var classroom = classrooms.Single();
 
@@ -100,7 +100,7 @@ namespace SchoolPlanner.Controllers {
                 Classroom = classroom,
                 Class = _class,
                 Subject = subject,
-                Slot = (int)TempData["slot"],
+                Slot = slot,
                 Teacher = teacher
             });
             _context.SaveChanges();
@@ -195,8 +195,8 @@ namespace SchoolPlanner.Controllers {
         }
 
         public IActionResult DeleteLesson(Reader reader, int id) {
-            reader.Lessons.RemoveAt(id);
-            reader.updateJsonFile();
+            // reader.Lessons.RemoveAt(id);
+            // reader.updateJsonFile();
             return RedirectToAction("Index");
         }
 
@@ -208,8 +208,6 @@ namespace SchoolPlanner.Controllers {
                 TempData["class"] = reader.NewLesson.Class;
                 TempData["subject"] = reader.NewLesson.Subject;
                 TempData["teacher"] = reader.NewLesson.Teacher;
-                TempData["classroom"] = chosenClassroom;
-                TempData["slot"] = slot;
                 return RedirectToAction("SuccessfulLessonAdding", new { chosenClassroom = chosenClassroom, slot = slot });
             }
         }
