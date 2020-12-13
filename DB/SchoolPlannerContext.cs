@@ -38,7 +38,9 @@ public class SchoolPlannerContext : DbContext {
                 entity.HasKey(e => e.Id);
                 entity.HasIndex(e => e.Name).IsUnique();
             });
+
+            modelBuilder.Entity<Lesson>(entity => {
+                entity.HasKey(e => e.Id);
+            });
         }
-
-
 }

@@ -18,8 +18,6 @@ namespace SchoolPlanner.Controllers {
 
         public IActionResult Index() {
             Edit edit = new Edit();
-            Reader reader = new Reader();
-            edit._Reader = reader;
             var classes = _context.Class.OrderBy(c => c.Name).ToList();
             var classrooms = _context.Classroom.OrderBy(c => c.Number).ToList();
             var teachers = _context.Teacher.OrderBy(t => t.Surname).ToList();
@@ -32,7 +30,7 @@ namespace SchoolPlanner.Controllers {
         }
 
         [HttpPost]
-        public IActionResult Index(Edit edit, Reader reader) {
+        public IActionResult Index(Edit edit) {
             if (edit.ClassroomToAdd != null) {
                 try {
                     _context.Classroom.Add(new Classroom {
@@ -46,17 +44,19 @@ namespace SchoolPlanner.Controllers {
                 }
             }
             else if (edit.ClassroomToDelete != null) {
-                try {
-                    var _classrooms = from c in _context.Classroom
-                                    where c.Number == edit.ClassroomToDelete
-                                    select c;
-                    var classroom = _classrooms.Single();
-                    _context.Classroom.Remove(classroom);
-                    _context.SaveChanges();
-                }
-                catch (Microsoft.EntityFrameworkCore.DbUpdateException) {
+                var _classrooms = from c in _context.Classroom
+                                where c.Id == edit.ClassroomToDelete
+                                select c;
+                var classroom = _classrooms.Single();
+                var associatedLessons = from l in _context.Lesson
+                                        where l.Classroom.Id == classroom.Id
+                                        select l;
+                if (associatedLessons.ToList().Count() > 0) {
                     return RedirectToAction("UnsuccessfulDeleting");
                 }
+                _context.Classroom.Remove(classroom);
+                _context.SaveChanges();
+
             }
             else if (edit.ClassToAdd != null) {
                 try {
@@ -71,17 +71,19 @@ namespace SchoolPlanner.Controllers {
                 }
             }
             else if (edit.ClassToDelete != null) {
-                try {
-                    var _classes = from c in _context.Class
-                                    where c.Name == edit.ClassToDelete
-                                    select c;
-                    var _class = _classes.Single();
-                    _context.Class.Remove(_class);
-                    _context.SaveChanges();
-                }
-                catch (Microsoft.EntityFrameworkCore.DbUpdateException) {
+                var _classes = from c in _context.Class
+                                where c.Id == edit.ClassToDelete
+                                select c;
+                var _class = _classes.Single();
+                var associatedLessons = from l in _context.Lesson
+                                        where l.Class.Id == _class.Id
+                                        select l;
+                if (associatedLessons.ToList().Count() > 0) {
                     return RedirectToAction("UnsuccessfulDeleting");
                 }
+                _context.Class.Remove(_class);
+                _context.SaveChanges();
+                
             }
             else if (edit.SubjectToAdd != null) {
                 try {
@@ -96,17 +98,18 @@ namespace SchoolPlanner.Controllers {
                 }
             }
             else if (edit.SubjectToDelete != null) {
-                try {
-                    var _subjects = from s in _context.Subject
-                                    where s.Name == edit.SubjectToDelete
-                                    select s;
-                    var subject = _subjects.Single();
-                    _context.Subject.Remove(subject);
-                    _context.SaveChanges();
-                }
-                catch (Microsoft.EntityFrameworkCore.DbUpdateException) {
+                var _subjects = from s in _context.Subject
+                                where s.Id == edit.SubjectToDelete
+                                select s;
+                var subject = _subjects.Single();
+                var associatedLessons = from l in _context.Lesson
+                                        where l.Subject.Id == subject.Id
+                                        select l;
+                if (associatedLessons.ToList().Count() > 0) {
                     return RedirectToAction("UnsuccessfulDeleting");
                 }
+                _context.Subject.Remove(subject);
+                _context.SaveChanges();
             }
             else if (edit.TeacherToAdd != null) {
                 try {
@@ -121,17 +124,18 @@ namespace SchoolPlanner.Controllers {
                 }
             }
             else if (edit.TeacherToDelete != null) {
-                try {
-                    var _teachers = from t in _context.Teacher
-                                    where t.Surname == edit.TeacherToDelete
-                                    select t;
-                    var teacher = _teachers.Single();
-                    _context.Teacher.Remove(teacher);
-                    _context.SaveChanges();
-                }
-                catch (Microsoft.EntityFrameworkCore.DbUpdateException) {
+                var _teachers = from t in _context.Teacher
+                                where t.Id == edit.TeacherToDelete
+                                select t;
+                var teacher = _teachers.Single();
+                var associatedLessons = from l in _context.Lesson
+                                        where l.Teacher.Id == teacher.Id
+                                        select l;
+                if (associatedLessons.ToList().Count() > 0) {
                     return RedirectToAction("UnsuccessfulDeleting");
                 }
+                _context.Teacher.Remove(teacher);
+                _context.SaveChanges();
             }
             var classes = _context.Class.OrderBy(c => c.Name).ToList();
             var classrooms = _context.Classroom.OrderBy(c => c.Number).ToList();

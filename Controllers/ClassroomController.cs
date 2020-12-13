@@ -29,9 +29,6 @@ namespace SchoolPlanner.Controllers {
         public IActionResult Index(Reader reader) { 
             ViewData["classrooms"] = _context.Classroom.OrderBy(c => c.Number).ToList();
             ViewData["all_lessons"] = _context.Lesson.ToList();
-            Console.WriteLine("BBBBBBBBBBBBBBBBBBBBBBBBB");
-            Console.WriteLine(_context.Lesson.ToList()[0].Classroom.Id);
-            Console.WriteLine(reader.ChosenClassroom);
             var chosen_lessons = _context.Lesson
                        .Where(l => l.Classroom.Id == reader.ChosenClassroom)
                        .Include(l => l.Class)
@@ -39,10 +36,6 @@ namespace SchoolPlanner.Controllers {
                        .Include(l => l.Classroom)
                        .Include(l => l.Teacher)
                        .ToList();
-            Console.WriteLine("AAAAAAAAAAAAAAAAAA");
-            foreach (var l in chosen_lessons) {
-                Console.WriteLine(l.Teacher.Surname);
-            }
             ViewData["chosen_lessons"] = chosen_lessons.ToList();
             return View(reader);
         }

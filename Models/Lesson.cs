@@ -1,11 +1,11 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System;
 
 
 namespace SchoolPlanner.Models {
     public class Lesson {
 
-        [Key]
         public int Id { get; set; }
 
         [Required]

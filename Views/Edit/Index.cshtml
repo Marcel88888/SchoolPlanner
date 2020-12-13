@@ -58,7 +58,7 @@
                         @Html.AntiForgeryToken()
                         @Html.ValidationSummary(true, "", new { @class = "text-danger"} )
                         if (classrooms != null && classrooms.Any()) {
-                            @Html.DropDownListFor(model=>model.ClassroomToDelete, new SelectList(classrooms, "", "Number"), "Select the classroom to delete", new {htmlAttributes = new {@class="form-control"}})                   
+                            @Html.DropDownListFor(model=>model.ClassroomToDelete, new SelectList(classrooms, "Id", "Number"), "Select the classroom to delete", new {htmlAttributes = new {@class="form-control"}})                   
                             <button type="submit" class="btn btn-primary">Delete</button>
                         }
                         else {
@@ -94,7 +94,7 @@
                         @Html.AntiForgeryToken()
                         @Html.ValidationSummary(true, "", new { @class = "text-danger"} )
                         if (classes != null && classes.Any()) {
-                            @Html.DropDownListFor(model=>model.ClassToDelete, new SelectList(classes, "", "Name"), "Select the class to delete", new {htmlAttributes = new {@class="form-control"}})                   
+                            @Html.DropDownListFor(model=>model.ClassToDelete, new SelectList(classes, "Id", "Name"), "Select the class to delete", new {htmlAttributes = new {@class="form-control"}})                   
                             <button type="submit" class="btn btn-primary">Delete</button>
                         }
                         else {
@@ -130,7 +130,7 @@
                         @Html.AntiForgeryToken()
                         @Html.ValidationSummary(true, "", new { @class = "text-danger"} )
                         if (subjects != null && subjects.Any()) {
-                            @Html.DropDownListFor(model=>model.SubjectToDelete, new SelectList(subjects, "", "Name"), "Select the subject to delete", new {htmlAttributes = new {@class="form-control"}})                   
+                            @Html.DropDownListFor(model=>model.SubjectToDelete, new SelectList(subjects, "Id", "Name"), "Select the subject to delete", new {htmlAttributes = new {@class="form-control"}})                   
                             <button type="submit" class="btn btn-primary">Delete</button>
                         }
                         else {
@@ -166,7 +166,7 @@
                         @Html.AntiForgeryToken()
                         @Html.ValidationSummary(true, "", new { @class = "text-danger"} )
                         if (teachers != null && teachers.Any()) {
-                            @Html.DropDownListFor(model=>model.TeacherToDelete, new SelectList(teachers, "", "Surname"), "Select the teacher to delete", new {htmlAttributes = new {@class="form-control"}})                   
+                            @Html.DropDownListFor(model=>model.TeacherToDelete, new SelectList(teachers, "Id", "Surname"), "Select the teacher to delete", new {htmlAttributes = new {@class="form-control"}})                   
                             <button type="submit" class="btn btn-primary">Delete</button>
                         }
                         else {
