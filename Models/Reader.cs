@@ -1,7 +1,7 @@
-using System;
 using System.Collections.Generic;
 using System.Text.Json;
 using System.IO;
+using System;
 
 namespace SchoolPlanner.Models {
     public class Reader {
@@ -19,6 +19,7 @@ namespace SchoolPlanner.Models {
         public List<Classroom> ClassroomsOptions { get; set; }
         public List<Class> ClassesOptions { get; set; }
         public List<Teacher> TeachersOptions { get; set; }
+        public DateTime LessonTimestamp { get; set; }
         private const string jsonFilePath = "./data/data.json"; 
 
     //     public Reader() {

@@ -4,6 +4,9 @@ using Microsoft.Extensions.Logging;
 using SchoolPlanner.Models;
 using System.Linq;
 using System;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+
 
 
 namespace SchoolPlanner.Controllers {
@@ -16,12 +19,12 @@ namespace SchoolPlanner.Controllers {
             _context = context;
         }
 
-        public IActionResult Index() {
+        public async Task<IActionResult> Index() {
             Edit edit = new Edit();
-            var classes = _context.Class.OrderBy(c => c.Name).ToList();
-            var classrooms = _context.Classroom.OrderBy(c => c.Number).ToList();
-            var teachers = _context.Teacher.OrderBy(t => t.Surname).ToList();
-            var subjects = _context.Subject.OrderBy(s => s.Name).ToList();
+            var classes = await _context.Class.OrderBy(c => c.Name).ToListAsync();
+            var classrooms = await _context.Classroom.OrderBy(c => c.Number).ToListAsync();
+            var teachers = await _context.Teacher.OrderBy(t => t.Surname).ToListAsync();
+            var subjects = await _context.Subject.OrderBy(s => s.Name).ToListAsync();
             ViewData["classes"] = classes; 
             ViewData["classrooms"] = classrooms; 
             ViewData["teachers"] = teachers; 
@@ -30,16 +33,15 @@ namespace SchoolPlanner.Controllers {
         }
 
         [HttpPost]
-        public IActionResult Index(Edit edit) {
+        public async Task<IActionResult> Index(Edit edit) {
             if (edit.ClassroomToAdd != null) {
                 try {
                     _context.Classroom.Add(new Classroom {
                             Number = edit.ClassroomToAdd,
-                            Timestamp = DateTime.Now
                             });
-                    _context.SaveChanges();
+                    await _context.SaveChangesAsync();
                 }
-                catch (Microsoft.EntityFrameworkCore.DbUpdateException) {
+                catch (DbUpdateException) {
                     return RedirectToAction("UnsuccessfulAdding");
                 }
             }
@@ -47,26 +49,28 @@ namespace SchoolPlanner.Controllers {
                 var _classrooms = from c in _context.Classroom
                                 where c.Id == edit.ClassroomToDelete
                                 select c;
-                var classroom = _classrooms.Single();
+                var classroom = await _classrooms.SingleOrDefaultAsync();
+                if (classroom == null) {
+                    return RedirectToAction("ConcurrencyUnsuccessfulEdition");
+                }
                 var associatedLessons = from l in _context.Lesson
                                         where l.Classroom.Id == classroom.Id
                                         select l;
-                if (associatedLessons.ToList().Count() > 0) {
+                if (await associatedLessons.CountAsync() > 0) {
                     return RedirectToAction("UnsuccessfulDeleting");
                 }
                 _context.Classroom.Remove(classroom);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
 
             }
             else if (edit.ClassToAdd != null) {
                 try {
                     _context.Class.Add(new Class {
                             Name = edit.ClassToAdd,
-                            Timestamp = DateTime.Now
                             });
-                    _context.SaveChanges();
+                    await _context.SaveChangesAsync();
                 }
-                catch (Microsoft.EntityFrameworkCore.DbUpdateException) {
+                catch (DbUpdateException) {
                     return RedirectToAction("UnsuccessfulAdding");
                 }
             }
@@ -74,26 +78,29 @@ namespace SchoolPlanner.Controllers {
                 var _classes = from c in _context.Class
                                 where c.Id == edit.ClassToDelete
                                 select c;
-                var _class = _classes.Single();
+                var _class = await _classes.SingleOrDefaultAsync();
+                if (_class == null) {
+                    return RedirectToAction("ConcurrencyUnsuccessfulEdition");
+                }
                 var associatedLessons = from l in _context.Lesson
                                         where l.Class.Id == _class.Id
                                         select l;
-                if (associatedLessons.ToList().Count() > 0) {
+                if (await associatedLessons.CountAsync() > 0) {
                     return RedirectToAction("UnsuccessfulDeleting");
                 }
                 _context.Class.Remove(_class);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
                 
             }
             else if (edit.SubjectToAdd != null) {
                 try {
                     _context.Subject.Add(new Subject {
                             Name = edit.SubjectToAdd,
-                            Timestamp = DateTime.Now
+                            // Timestamp = DateTime.Now
                             });
-                    _context.SaveChanges();
+                    await _context.SaveChangesAsync();
                 }
-                catch (Microsoft.EntityFrameworkCore.DbUpdateException) {
+                catch (DbUpdateException) {
                     return RedirectToAction("UnsuccessfulAdding");
                 }
             }
@@ -101,25 +108,28 @@ namespace SchoolPlanner.Controllers {
                 var _subjects = from s in _context.Subject
                                 where s.Id == edit.SubjectToDelete
                                 select s;
-                var subject = _subjects.Single();
+                var subject = await _subjects.SingleOrDefaultAsync();
+                if (subject == null) {
+                    return RedirectToAction("ConcurrencyUnsuccessfulEdition");
+                }
                 var associatedLessons = from l in _context.Lesson
                                         where l.Subject.Id == subject.Id
                                         select l;
-                if (associatedLessons.ToList().Count() > 0) {
+                if (await associatedLessons.CountAsync() > 0) {
                     return RedirectToAction("UnsuccessfulDeleting");
                 }
                 _context.Subject.Remove(subject);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
             else if (edit.TeacherToAdd != null) {
                 try {
                     _context.Teacher.Add(new Teacher {
                             Surname = edit.TeacherToAdd,
-                            Timestamp = DateTime.Now
+                            // Timestamp = DateTime.Now
                             });
-                    _context.SaveChanges();
+                    await _context.SaveChangesAsync();
                 }
-                catch (Microsoft.EntityFrameworkCore.DbUpdateException) {
+                catch (DbUpdateException) {
                     return RedirectToAction("UnsuccessfulAdding");
                 }
             }
@@ -127,20 +137,23 @@ namespace SchoolPlanner.Controllers {
                 var _teachers = from t in _context.Teacher
                                 where t.Id == edit.TeacherToDelete
                                 select t;
-                var teacher = _teachers.Single();
+                var teacher = await _teachers.SingleOrDefaultAsync();
+                if (teacher == null) {
+                    return RedirectToAction("ConcurrencyUnsuccessfulEdition");
+                }
                 var associatedLessons = from l in _context.Lesson
                                         where l.Teacher.Id == teacher.Id
                                         select l;
-                if (associatedLessons.ToList().Count() > 0) {
+                if (await associatedLessons.CountAsync() > 0) {
                     return RedirectToAction("UnsuccessfulDeleting");
                 }
                 _context.Teacher.Remove(teacher);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
-            var classes = _context.Class.OrderBy(c => c.Name).ToList();
-            var classrooms = _context.Classroom.OrderBy(c => c.Number).ToList();
-            var teachers = _context.Teacher.OrderBy(t => t.Surname).ToList();
-            var subjects = _context.Subject.OrderBy(s => s.Name).ToList();
+            var classes = await _context.Class.OrderBy(c => c.Name).ToListAsync();
+            var classrooms = await _context.Classroom.OrderBy(c => c.Number).ToListAsync();
+            var teachers = await _context.Teacher.OrderBy(t => t.Surname).ToListAsync();
+            var subjects = await _context.Subject.OrderBy(s => s.Name).ToListAsync();
             ViewData["classes"] = classes; 
             ViewData["classrooms"] = classrooms; 
             ViewData["teachers"] = teachers; 
@@ -148,11 +161,15 @@ namespace SchoolPlanner.Controllers {
             return View(edit);
         }
 
-        public IActionResult UnsuccessfulAdding(Reader reader, int id) {
+        public IActionResult UnsuccessfulAdding() {
             return View();
         }
 
-        public IActionResult UnsuccessfulDeleting(Reader reader, int id) {
+        public IActionResult UnsuccessfulDeleting() {
+            return View();
+        }
+
+        public IActionResult ConcurrencyUnsuccessfulEdition() {
             return View();
         }
 

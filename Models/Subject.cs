@@ -11,6 +11,7 @@ namespace SchoolPlanner.Models {
         [MaxLength(20)]
         public string Name { get; set; }
 
+        [Timestamp]
         public DateTime Timestamp { get; set; }
     }
 }

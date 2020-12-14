@@ -104,7 +104,7 @@ namespace SchoolPlanner.Controllers {
                 Subject = subject,
                 Slot = slot,
                 Teacher = teacher,
-                Timestamp = DateTime.Now
+                // Timestamp = DateTime.Now
             });
             _context.SaveChanges();
             return View();     
@@ -187,7 +187,7 @@ namespace SchoolPlanner.Controllers {
             lesson.Classroom = classroom;
             lesson.Subject = subject;
             lesson.Teacher = teacher;
-            lesson.Timestamp = DateTime.Now;
+            // lesson.Timestamp = DateTime.Now;
             _context.SaveChanges();
 
             return View();

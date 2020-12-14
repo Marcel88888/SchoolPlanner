@@ -1,0 +1,11 @@
+@{
+    ViewData["Title"] = "Concurrency error";
+}
+
+<div class="text-center">
+    <div class="alert alert-danger">
+        <strong>Error!</strong> The record you attempted to edit or delete was modified by another user after you got the original value.
+
+    </div>
+    <button type="button" class="btn btn-secondary" onclick="location.href='@Url.Action("Index", "Classroom")'">Return</button><br><br> 
+</div>

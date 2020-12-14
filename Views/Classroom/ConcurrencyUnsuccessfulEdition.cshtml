@@ -1,0 +1,10 @@
+@{
+    ViewData["Title"] = "Concurrency error";
+}
+
+<div class="text-center">
+    <div class="alert alert-danger">
+        <strong>Error!</strong> The value you tried to modify or add had been modified or deleted by another user before.
+    </div>
+    <button type="button" class="btn btn-secondary" onclick="location.href='@Url.Action("Index", "Classroom")'">Return</button><br><br> 
+</div>
