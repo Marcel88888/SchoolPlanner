@@ -1,0 +1,13 @@
+@{
+    ViewData["Title"] = "Concurrency error";
+    string error_message = (string)ViewData["error_message"];
+    Console.WriteLine((string)ViewData["error_message"]);
+    Console.WriteLine(error_message);
+}
+
+<div class="text-center">
+    <div class="alert alert-danger">
+        <strong>Error!</strong> @error_message
+    </div>
+    <button type="button" class="btn btn-secondary" onclick="location.href='@Url.Action("Index", "Class")'">Return</button><br><br> 
+</div>

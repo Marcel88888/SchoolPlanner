@@ -1,10 +1,13 @@
 @{
     ViewData["Title"] = "Concurrency error";
+    string error_message = (string)ViewData["error_message"];
+    Console.WriteLine((string)ViewData["error_message"]);
+    Console.WriteLine(error_message);
 }
 
 <div class="text-center">
     <div class="alert alert-danger">
-        <strong>Error!</strong> The value you tried to modify or add had been modified or deleted by another user before.
+        <strong>Error!</strong> @error_message
     </div>
     <button type="button" class="btn btn-secondary" onclick="location.href='@Url.Action("Index", "Classroom")'">Return</button><br><br> 
 </div>

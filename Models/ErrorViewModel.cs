@@ -1,5 +1,3 @@
-using System;
-
 namespace SchoolPlanner.Models {
     public class ErrorViewModel {
         public string RequestId { get; set; }

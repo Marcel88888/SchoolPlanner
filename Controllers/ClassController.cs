@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using SchoolPlanner.Models;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 
 
 namespace SchoolPlanner.Controllers {
@@ -18,32 +19,32 @@ namespace SchoolPlanner.Controllers {
             _context = context;
         }
 
-        public IActionResult Index() {
-            Reader reader = new Reader();
-            var classes = _context.Class.OrderBy(c => c.Name).ToList();
+        public async Task<IActionResult> Index() {
+            Helper helper = new Helper();
+            var classes = await _context.Class.OrderBy(c => c.Name).ToListAsync();
             ViewData["classes"] = classes; 
-            return View(reader);
+            return View(helper);
         }
 
         [HttpPost]
-        public IActionResult Index(Reader reader) {     
-            ViewData["classes"] = _context.Class.OrderBy(c => c.Name).ToList();
-            ViewData["all_lessons"] = _context.Lesson.ToList();
-            var chosen_lessons = _context.Lesson
-                       .Where(l => l.Class.Id == reader.ChosenClass)
+        public async Task<IActionResult> Index(Helper helper) {     
+            ViewData["classes"] = await _context.Class.OrderBy(c => c.Name).ToListAsync();
+            ViewData["all_lessons"] = await _context.Lesson.ToListAsync();
+            var chosen_lessons = await _context.Lesson
+                       .Where(l => l.Class.Id == helper.ChosenClass)
                        .Include(l => l.Class)
                        .Include(l => l.Subject)
                        .Include(l => l.Classroom)
                        .Include(l => l.Teacher)
-                       .ToList();
-            ViewData["chosen_lessons"] = chosen_lessons.ToList();
-            return View(reader);
+                       .ToListAsync();
+            ViewData["chosen_lessons"] = chosen_lessons;
+            return View(helper);
         }
 
-        public IActionResult AddLesson(Reader reader, int chosenClass, int slot) {
+        public async Task<IActionResult> AddLesson(Helper helper, int chosenClass, int slot) {
             var classroomsOptions = new List<Classroom>();
-            var classrooms = _context.Classroom.ToList();
-            var lessons = _context.Lesson.ToList();
+            var classrooms = await _context.Classroom.ToListAsync();
+            var lessons = await _context.Lesson.ToListAsync();
             foreach (Classroom classroom in classrooms) {
                 bool classroomAvailable = true;
                 foreach (Lesson lesson in lessons) {
@@ -57,7 +58,7 @@ namespace SchoolPlanner.Controllers {
                 }
             }
             var teachersOptions = new List<Teacher>();
-            var teachers = _context.Teacher.ToList();
+            var teachers = await _context.Teacher.ToListAsync();
             foreach (Teacher teacher in teachers) {
                 bool teacherAvailable = true;
                 foreach (Lesson lesson in lessons) {
@@ -75,28 +76,32 @@ namespace SchoolPlanner.Controllers {
             ViewData["teachers_options"] = teachersOptions;
             ViewData["chosen_class"] = chosenClass;
             ViewData["slot"] = slot;
-            ViewData["subjects"] = _context.Subject.ToList();
+            ViewData["subjects"] = await _context.Subject.ToListAsync();
 
-            return View(reader);
+            return View(helper);
         }
 
-        public IActionResult SuccessfulLessonAdding(Reader reader, int chosenClass, int slot) {
+        public async Task<IActionResult> SuccessfulLessonAdding(Helper helper, int chosenClass, int slot) {
             var classrooms = from c in _context.Classroom
                             where c.Id == (int)TempData["classroom"]
                             select c;
-            var classroom = classrooms.Single();
+            var classroom = await classrooms.SingleOrDefaultAsync();
             var subjects = from s in _context.Subject
                             where s.Id == (int)TempData["subject"]
                             select s;
-            var subject = subjects.Single();
+            var subject = await subjects.SingleOrDefaultAsync();
             var teachers = from t in _context.Teacher
                             where t.Id == (int)TempData["teacher"]
                             select t;
-            var teacher = teachers.Single();
+            var teacher = await teachers.SingleOrDefaultAsync();
             var classes = from c in _context.Class
                             where c.Id == chosenClass
                             select c;
-            var _class = classes.Single();
+            var _class = await classes.SingleOrDefaultAsync();
+
+            if (classroom == null || subject == null || teacher == null || _class == null) {
+                return RedirectToAction("ConcurrencyError", new { errorMessage = "The value you tried to select had been deleted by another user before." });
+            }
 
             _context.Add(new Lesson {
                 Classroom = classroom,
@@ -104,26 +109,28 @@ namespace SchoolPlanner.Controllers {
                 Subject = subject,
                 Slot = slot,
                 Teacher = teacher,
-                // Timestamp = DateTime.Now
             });
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return View();     
         }
 
-        public IActionResult UnsuccessfulLessonAdding(Reader reader, int chosenClass, int slot) {
+        public IActionResult UnsuccessfulLessonAdding(Helper helper, int chosenClass, int slot) {
             ViewData["chosen_class"] = chosenClass;
             ViewData["slot"] = slot;
             return View();
         }
 
-        public IActionResult EditLesson(Reader reader, int id, int slot) {
+        public async Task<IActionResult> EditLesson(Helper helper, int id, int slot) {
             var classroomsOptions = new List<Classroom>();
-            var classrooms = _context.Classroom.ToList();
-            var lessons = _context.Lesson.ToList();
+            var classrooms = await _context.Classroom.ToListAsync();
+            var lessons = await _context.Lesson.ToListAsync();
             var chosenLessons = from l in _context.Lesson
                         where l.Id == id
                         select l;
-            var chosenLesson = chosenLessons.Single();
+            var chosenLesson = await chosenLessons.SingleOrDefaultAsync();
+            if (chosenLesson == null) {
+                return RedirectToAction("ConcurrencyError", new { errorMessage = "The lesson you tried to modify had been deleted by another user before." });
+            }
             classroomsOptions.Add(chosenLesson.Classroom);
             foreach (Classroom classroom in classrooms) {
                 bool classroomAvailable = true;
@@ -138,7 +145,7 @@ namespace SchoolPlanner.Controllers {
                 }
             }
             var teachersOptions = new List<Teacher>();
-            var teachers = _context.Teacher.ToList();
+            var teachers = await _context.Teacher.ToListAsync();
             teachersOptions.Add(chosenLesson.Teacher);
             foreach (Teacher teacher in teachers) {
                 bool teacherAvailable = true;
@@ -154,82 +161,111 @@ namespace SchoolPlanner.Controllers {
             }
 
             ViewData["lesson_to_edit_id"] = id;
+            ViewData["lesson_timestamp"] = chosenLesson.Timestamp;
             ViewData["classrooms_options"] = classroomsOptions;
             ViewData["teachers_options"] = teachersOptions;
             ViewData["slot"] = slot;
-            ViewData["subjects"] = _context.Subject.ToList();
+            ViewData["subjects"] = await _context.Subject.ToListAsync();
             ViewData["selected_classroom"] = chosenLesson.Classroom.Id;
             ViewData["selected_subject"] = chosenLesson.Subject.Id;
             ViewData["selected_teacher"] = chosenLesson.Teacher.Id; 
 
-            return View(reader);
+            return View(helper);
         }
 
-        public IActionResult SuccessfulLessonEdit(Reader reader, int id) {
+        public async Task<IActionResult> SuccessfulLessonEdit(Helper helper, int id, DateTime currentTimestamp) {
             var classrooms = from c in _context.Classroom
                             where c.Id == (int)TempData["classroom"]
                             select c;
-            var classroom = classrooms.Single();
+            var classroom = await classrooms.SingleOrDefaultAsync();
             var subjects = from s in _context.Subject
                             where s.Id == (int)TempData["subject"]
                             select s;
-            var subject = subjects.Single();
+            var subject = await subjects.SingleOrDefaultAsync();
             var teachers = from t in _context.Teacher
                             where t.Id == (int)TempData["teacher"]
                             select t;
-            var teacher = teachers.Single();
+            var teacher = await teachers.SingleOrDefaultAsync();
             
             var lessons = from l in _context.Lesson
                         where l.Id == id
                         select l;
-            var lesson = lessons.Single();
+            var lesson = await lessons.SingleOrDefaultAsync();
+
+            if (lesson == null) {
+                return RedirectToAction("ConcurrencyError", new { errorMessage = "The lesson you tried to modify had been deleted by another user before." });
+            }
+
+            if (classroom == null || subject == null || teacher == null) {
+                return RedirectToAction("ConcurrencyError", new { errorMessage = "The value you tried to select had been deleted by another user before." });
+            }
             
-            lesson.Classroom = classroom;
-            lesson.Subject = subject;
-            lesson.Teacher = teacher;
-            // lesson.Timestamp = DateTime.Now;
-            _context.SaveChanges();
+            try {
+                lesson.Classroom = classroom;
+                lesson.Subject = subject;
+                lesson.Teacher = teacher;
+                _context.Entry(lesson).Property("Timestamp").OriginalValue = currentTimestamp;
+                _context.Lesson.Update(lesson);
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException) {
+                return RedirectToAction("ConcurrencyError", new { errorMessage = "The lesson you attempted to edit was modified by another user after you got the original value." });
+            }
 
             return View();
         }
 
-        public IActionResult UnsuccessfulLessonEdit(Reader reader, int id) {
+        public IActionResult UnsuccessfulLessonEdit(Helper helper, int id) {
             ViewData["id"] = id;
             return View();
         }
 
-        public IActionResult DeleteLesson(Reader reader, int id) {
+        public async Task<IActionResult> DeleteLesson(Helper helper, int id, DateTime currentTimestamp) {
             var lessons = from l in _context.Lesson
                             where l.Id == id
                             select l;
-            var lesson = lessons.Single();
-            _context.Lesson.Remove(lesson);
-            _context.SaveChanges();
+            var lesson = await lessons.SingleOrDefaultAsync();
+            if (lesson == null) {
+                return RedirectToAction("ConcurrencyError", new { errorMessage = "The lesson you tried to delete had been deleted by another user before." });
+            }
+            try {
+                _context.Entry(lesson).Property("Timestamp").OriginalValue = currentTimestamp;
+                _context.Lesson.Remove(lesson);
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException) {
+                return RedirectToAction("ConcurrencyError", new { errorMessage = "The lesson you attempted to delete was modified by another user after you got the original value." });
+            }
             return RedirectToAction("Index");
         }
 
-        public IActionResult ValidateAddedData(Reader reader, int chosenClass, int slot) {
-            if (reader.NewLesson.Classroom == null || reader.NewLesson.Subject == null || reader.NewLesson.Teacher == null) {
+        public IActionResult ValidateAddedData(Helper helper, int chosenClass, int slot) {
+            if (helper.NewLesson.Classroom == null || helper.NewLesson.Subject == null || helper.NewLesson.Teacher == null) {
                 return RedirectToAction("UnsuccessfulLessonAdding", new { chosenClass = chosenClass, slot = slot });
             }
             else {
-                TempData["classroom"] = reader.NewLesson.Classroom;
-                TempData["subject"] = reader.NewLesson.Subject;
-                TempData["teacher"] = reader.NewLesson.Teacher;
+                TempData["classroom"] = helper.NewLesson.Classroom;
+                TempData["subject"] = helper.NewLesson.Subject;
+                TempData["teacher"] = helper.NewLesson.Teacher;
                 return RedirectToAction("SuccessfulLessonAdding", new { chosenClass = chosenClass, slot = slot });
             }
         }
 
-        public IActionResult ValidateEditedData(Reader reader, int id) {
-            if (reader.EditedLesson.Classroom == null || reader.EditedLesson.Subject == null || reader.EditedLesson.Teacher == null) {
+        public IActionResult ValidateEditedData(Helper helper, int id, DateTime currentTimestamp) {
+            if (helper.EditedLesson.Classroom == null || helper.EditedLesson.Subject == null || helper.EditedLesson.Teacher == null) {
                 return RedirectToAction("UnsuccessfulLessonEdit", new { id = id });
             }
             else {
-                TempData["classroom"] = reader.EditedLesson.Classroom;
-                TempData["subject"] = reader.EditedLesson.Subject;
-                TempData["teacher"] = reader.EditedLesson.Teacher;
-                return RedirectToAction("SuccessfulLessonEdit", new { id = id });
+                TempData["classroom"] = helper.EditedLesson.Classroom;
+                TempData["subject"] = helper.EditedLesson.Subject;
+                TempData["teacher"] = helper.EditedLesson.Teacher;
+                return RedirectToAction("SuccessfulLessonEdit", new { id = id, currentTimestamp = currentTimestamp });
             }
+        }
+
+        public IActionResult ConcurrencyError(string errorMessage) {
+            ViewData["error_message"] = errorMessage;
+            return View();
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

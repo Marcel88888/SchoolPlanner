@@ -1,5 +1,5 @@
 @using System;
-@model Reader
+@model Helper
 
 @{
     ViewData["Title"] = "Edit the lesson";
@@ -17,7 +17,7 @@
     var selectedSubject = (int)ViewData["selected_subject"];
     var selectedTeacher = (int)ViewData["selected_teacher"]; }
 
-@using (Html.BeginForm("ValidateEditedData", "Classroom", new { id = lessonToEditId, currentTimestamp = (DateTime)ViewData["lesson_timestamp"]} )) {
+@using (Html.BeginForm("ValidateEditedData", "Classroom", new { id = lessonToEditId, currentTimestamp = (DateTime)ViewData["lesson_timestamp"] } )) {
     @Html.AntiForgeryToken()
     @Html.ValidationSummary(true, "", new { @class = "text-danger"} )
 

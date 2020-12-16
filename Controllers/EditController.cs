@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SchoolPlanner.Models;
 using System.Linq;
-using System;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
@@ -42,7 +41,7 @@ namespace SchoolPlanner.Controllers {
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateException) {
-                    return RedirectToAction("UnsuccessfulAdding");
+                    return RedirectToAction("Failure", new { errorMessage = "The value you have tried to add is not unique or the length is too big."} );
                 }
             }
             else if (edit.ClassroomToDelete != null) {
@@ -51,13 +50,13 @@ namespace SchoolPlanner.Controllers {
                                 select c;
                 var classroom = await _classrooms.SingleOrDefaultAsync();
                 if (classroom == null) {
-                    return RedirectToAction("ConcurrencyUnsuccessfulEdition");
+                    return RedirectToAction("Failure", new { errorMessage = "The value you tried to delete had been deleted by another user before." });
                 }
                 var associatedLessons = from l in _context.Lesson
                                         where l.Classroom.Id == classroom.Id
                                         select l;
                 if (await associatedLessons.CountAsync() > 0) {
-                    return RedirectToAction("UnsuccessfulDeleting");
+                    return RedirectToAction("Failure", new { ErrorMessage = "The value you have tried to delete has some lessons associated." });
                 }
                 _context.Classroom.Remove(classroom);
                 await _context.SaveChangesAsync();
@@ -71,7 +70,7 @@ namespace SchoolPlanner.Controllers {
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateException) {
-                    return RedirectToAction("UnsuccessfulAdding");
+                    return RedirectToAction("Failure", new { errorMessage = "The value you have tried to add is not unique or the length is too big." });
                 }
             }
             else if (edit.ClassToDelete != null) {
@@ -80,13 +79,13 @@ namespace SchoolPlanner.Controllers {
                                 select c;
                 var _class = await _classes.SingleOrDefaultAsync();
                 if (_class == null) {
-                    return RedirectToAction("ConcurrencyUnsuccessfulEdition");
+                    return RedirectToAction("Failure", new { errorMessage = "The value you tried to delete had been deleted by another user before." });
                 }
                 var associatedLessons = from l in _context.Lesson
                                         where l.Class.Id == _class.Id
                                         select l;
                 if (await associatedLessons.CountAsync() > 0) {
-                    return RedirectToAction("UnsuccessfulDeleting");
+                    return RedirectToAction("Failure", new { errorMessage = "The value you have tried to delete has some lessons associated." });
                 }
                 _context.Class.Remove(_class);
                 await _context.SaveChangesAsync();
@@ -96,12 +95,11 @@ namespace SchoolPlanner.Controllers {
                 try {
                     _context.Subject.Add(new Subject {
                             Name = edit.SubjectToAdd,
-                            // Timestamp = DateTime.Now
                             });
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateException) {
-                    return RedirectToAction("UnsuccessfulAdding");
+                    return RedirectToAction("Failure", new { errorMessage = "The value you have tried to add is not unique or the length is too big." });
                 }
             }
             else if (edit.SubjectToDelete != null) {
@@ -110,13 +108,13 @@ namespace SchoolPlanner.Controllers {
                                 select s;
                 var subject = await _subjects.SingleOrDefaultAsync();
                 if (subject == null) {
-                    return RedirectToAction("ConcurrencyUnsuccessfulEdition");
+                    return RedirectToAction("Failure", new { errorMessage = "The value you tried to delete had been deleted by another user before." });
                 }
                 var associatedLessons = from l in _context.Lesson
                                         where l.Subject.Id == subject.Id
                                         select l;
                 if (await associatedLessons.CountAsync() > 0) {
-                    return RedirectToAction("UnsuccessfulDeleting");
+                    return RedirectToAction("Failure", new { errorMessage = "The value you have tried to delete has some lessons associated." });
                 }
                 _context.Subject.Remove(subject);
                 await _context.SaveChangesAsync();
@@ -125,12 +123,11 @@ namespace SchoolPlanner.Controllers {
                 try {
                     _context.Teacher.Add(new Teacher {
                             Surname = edit.TeacherToAdd,
-                            // Timestamp = DateTime.Now
                             });
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateException) {
-                    return RedirectToAction("UnsuccessfulAdding");
+                    return RedirectToAction("Failure", new { errorMessage = "The value you have tried to add is not unique or the length is too big." });
                 }
             }
             else if (edit.TeacherToDelete != null) {
@@ -139,13 +136,13 @@ namespace SchoolPlanner.Controllers {
                                 select t;
                 var teacher = await _teachers.SingleOrDefaultAsync();
                 if (teacher == null) {
-                    return RedirectToAction("ConcurrencyUnsuccessfulEdition");
+                    return RedirectToAction("Failure", new { errorMessage = "The value you tried to delete had been deleted by another user before." });
                 }
                 var associatedLessons = from l in _context.Lesson
                                         where l.Teacher.Id == teacher.Id
                                         select l;
                 if (await associatedLessons.CountAsync() > 0) {
-                    return RedirectToAction("UnsuccessfulDeleting");
+                    return RedirectToAction("Failure", new { errorMessage = "The value you have tried to delete has some lessons associated. "});
                 }
                 _context.Teacher.Remove(teacher);
                 await _context.SaveChangesAsync();
@@ -161,15 +158,8 @@ namespace SchoolPlanner.Controllers {
             return View(edit);
         }
 
-        public IActionResult UnsuccessfulAdding() {
-            return View();
-        }
-
-        public IActionResult UnsuccessfulDeleting() {
-            return View();
-        }
-
-        public IActionResult ConcurrencyUnsuccessfulEdition() {
+        public IActionResult Failure(string errorMessage) {
+            ViewData["error_message"] = errorMessage;
             return View();
         }
 
