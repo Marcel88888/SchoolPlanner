@@ -82,7 +82,7 @@ namespace SchoolPlanner.Controllers {
         }
 
 
-        public async Task<IActionResult> SuccessfulLessonAdding(Helper helper, int chosenTeacher, int slot) {
+        public async Task<IActionResult> SuccessfulLessonAdding(int chosenTeacher, int slot) {
             var classes = from c in _context.Class
                             where c.Id == (int)TempData["class"]
                             select c;
@@ -115,7 +115,7 @@ namespace SchoolPlanner.Controllers {
             return View();     
         }
 
-        public IActionResult UnsuccessfulLessonAdding(Helper helper, int chosenTeacher, int slot) {
+        public IActionResult UnsuccessfulLessonAdding(int chosenTeacher, int slot) {
             ViewData["chosen_teacher"] = chosenTeacher;
             ViewData["slot"] = slot;
             return View();
@@ -173,7 +173,7 @@ namespace SchoolPlanner.Controllers {
 
             return View(helper);
         }
-        public async Task<IActionResult> SuccessfulLessonEdit(Helper helper, int id, DateTime currentTimestamp) {
+        public async Task<IActionResult> SuccessfulLessonEdit(int id, DateTime currentTimestamp) {
             var classes = from c in _context.Class
                             where c.Id == (int)TempData["class"]
                             select c;
@@ -215,12 +215,12 @@ namespace SchoolPlanner.Controllers {
             return View();
         }
 
-        public IActionResult UnsuccessfulLessonEdit(Helper helper, int id) {
+        public IActionResult UnsuccessfulLessonEdit(int id) {
             ViewData["id"] = id;
             return View();
         }
 
-        public async Task<IActionResult> DeleteLesson(Helper helper, int id, DateTime currentTimestamp) {
+        public async Task<IActionResult> DeleteLesson(int id, DateTime currentTimestamp) {
             var lessons = from l in _context.Lesson
                             where l.Id == id
                             select l;
