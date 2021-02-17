@@ -36,7 +36,7 @@ Project made for the subject RAD Tools at the Warsaw University of Technology.
 
 ## Features
 
-* The user can select a classroom or teacher or class for which the data is presented.
+* The user can select a classroom or a teacher or a class for which the data is presented.
 * The user can click an entry (filled or empty) to add/edit/delete a lesson .
 * The application only presents data that can be saved (e.g. when a class already has classes, it is not on the list).
 * The application allows the user to save only non-conflicting data (e.g. the same class in different rooms at the same time).
